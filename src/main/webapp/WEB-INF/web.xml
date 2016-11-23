@@ -1,0 +1,287 @@
+<web-app>
+    <display-name>Veterinary Web Application</display-name>
+
+    <welcome-file-list>
+         <welcome-file>/WEB-INF/view/signIn.jsp</welcome-file>
+    </welcome-file-list>
+
+    <!-- SERVLETS -->
+    <!-- Sign In Page -->
+    <servlet>
+        <servlet-name>SignIn</servlet-name>
+        <jsp-file>/WEB-INF/view/signIn.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>SignIn</servlet-name>
+        <url-pattern>/signIn</url-pattern>
+    </servlet-mapping>
+
+    <!-- Registration Page -->
+    <servlet>
+        <servlet-name>Registration</servlet-name>
+        <jsp-file>/WEB-INF/view/registration.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Registration</servlet-name>
+        <url-pattern>/register</url-pattern>
+    </servlet-mapping>
+
+    <!-- Navigation bar - page part -->
+    <servlet>
+        <servlet-name>NavigationBar</servlet-name>
+        <jsp-file>/WEB-INF/view/navigationBar.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>NavigationBar</servlet-name>
+        <url-pattern>/navigationBar</url-pattern>
+    </servlet-mapping>
+
+    <!-- Patients Table Page -->
+    <servlet>
+        <servlet-name>PatientsTable</servlet-name>
+        <jsp-file>/WEB-INF/view/patientsTable.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>PatientsTable</servlet-name>
+        <url-pattern>/patientsTable</url-pattern>
+    </servlet-mapping>
+    <!-- Add Patients Page -->
+    <servlet>
+        <servlet-name>AddPatient</servlet-name>
+        <jsp-file>/WEB-INF/view/addPatient.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AddPatient</servlet-name>
+        <url-pattern>/addPatient</url-pattern>
+    </servlet-mapping>
+
+    <!-- Doctors Table Page -->
+    <servlet>
+        <servlet-name>DoctorsTable</servlet-name>
+        <jsp-file>/WEB-INF/view/doctorsTable.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>DoctorsTable</servlet-name>
+        <url-pattern>/doctorsTable</url-pattern>
+    </servlet-mapping>
+    <!-- Add Doctor Page -->
+    <servlet>
+        <servlet-name>AddDoctor</servlet-name>
+        <jsp-file>/WEB-INF/view/addDoctor.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AddDoctor</servlet-name>
+        <url-pattern>/addDoctor</url-pattern>
+    </servlet-mapping>
+
+    <!-- Clinical Records Table Page -->
+    <servlet>
+        <servlet-name>ClinicalRecordsTable</servlet-name>
+        <jsp-file>/WEB-INF/view/clinicalRecordsTable.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ClinicalRecordsTable</servlet-name>
+        <url-pattern>/clinicalRecordsTable</url-pattern>
+    </servlet-mapping>
+    <!-- Add Clinical Record Page -->
+    <servlet>
+        <servlet-name>AddClinicalRecord</servlet-name>
+        <jsp-file>/WEB-INF/view/addClinicalRecord.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AddClinicalRecord</servlet-name>
+        <url-pattern>/addClinicalRecord</url-pattern>
+    </servlet-mapping>
+    <!-- Change Clinical Record Page -->
+    <servlet>
+        <servlet-name>ChangeClinicalRecord</servlet-name>
+        <jsp-file>/WEB-INF/view/changeClinicalRecord.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ChangeClinicalRecord</servlet-name>
+        <url-pattern>/changeClinicalRecord</url-pattern>
+    </servlet-mapping>
+
+
+
+
+
+    <!-- Sign In Controller -->
+    <servlet>
+        <display-name>Sign in Controller</display-name>
+        <servlet-name>SignInController</servlet-name>
+        <servlet-class>controller.SignInController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>SignInController</servlet-name>
+        <url-pattern>/signInController</url-pattern>
+    </servlet-mapping>
+    <!-- Registration Controller -->
+    <servlet>
+        <display-name>RegisterController</display-name>
+        <servlet-name>RegisterController</servlet-name>
+        <servlet-class>controller.RegistrationController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>RegisterController</servlet-name>
+        <url-pattern>/registerController</url-pattern>
+    </servlet-mapping>
+
+    <!-- Patients Table Controller -->
+    <servlet>
+        <display-name>Patients table controller</display-name>
+        <servlet-name>PatientsTableController</servlet-name>
+        <servlet-class>controller.PatientsTableController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>PatientsTableController</servlet-name>
+        <url-pattern>/patientsTableController</url-pattern>
+    </servlet-mapping>
+    <!-- Add Patient Controller -->
+    <servlet>
+        <display-name>Add patient controller</display-name>
+        <servlet-name>AddPatientController</servlet-name>
+        <servlet-class>controller.AddPatientController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AddPatientController</servlet-name>
+        <url-pattern>/addPatientController</url-pattern>
+    </servlet-mapping>
+
+    <!-- Doctors Table Controller -->
+    <servlet>
+        <display-name>Doctors table controller</display-name>
+        <servlet-name>DoctorsTableController</servlet-name>
+        <servlet-class>controller.DoctorsTableController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>DoctorsTableController</servlet-name>
+        <url-pattern>/doctorsTableController</url-pattern>
+    </servlet-mapping>
+    <!-- Add Doctor Controller -->
+    <servlet>
+        <display-name>Add doctor controller</display-name>
+        <servlet-name>AddDoctorController</servlet-name>
+        <servlet-class>controller.AddDoctorController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AddDoctorController</servlet-name>
+        <url-pattern>/addDoctorController</url-pattern>
+    </servlet-mapping>
+
+    <!-- Clinical Records Table Controller -->
+    <servlet>
+        <display-name>Clinical records table controller</display-name>
+        <servlet-name>ClinicalRecordsTableController</servlet-name>
+        <servlet-class>controller.ClinicalRecordsTableController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ClinicalRecordsTableController</servlet-name>
+        <url-pattern>/clinicalRecordsTableController</url-pattern>
+    </servlet-mapping>
+    <!-- Add Clinical Records Controller -->
+    <servlet>
+        <display-name>Add clinical record controller</display-name>
+        <servlet-name>AddClinicalRecordController</servlet-name>
+        <servlet-class>controller.AddClinicalRecordController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AddClinicalRecordController</servlet-name>
+        <url-pattern>/addClinicalRecordController</url-pattern>
+    </servlet-mapping>
+    <!-- Change Clinical Records Controller -->
+    <servlet>
+        <display-name>Change clinical record controller</display-name>
+        <servlet-name>ChangeClinicalRecordController</servlet-name>
+        <servlet-class>controller.ChangeClinicalRecordController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ChangeClinicalRecordController</servlet-name>
+        <url-pattern>/changeClinicalRecordController</url-pattern>
+    </servlet-mapping>
+    <!-- Refresh Patients And Doctors Tables Controller -->
+    <servlet>
+        <display-name>Refresh patients and doctors tables controller</display-name>
+        <servlet-name>RefreshPatientsAndDoctorsTablesController</servlet-name>
+        <servlet-class>controller.RefreshPatientsAndDoctorsTablesController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>RefreshPatientsAndDoctorsTablesController</servlet-name>
+        <url-pattern>/refreshPatientsAndDoctorsTablesController</url-pattern>
+    </servlet-mapping>
+
+    <!-- Log out Controller -->
+    <servlet>
+        <display-name>Log out controller</display-name>
+        <servlet-name>LogOutController</servlet-name>
+        <servlet-class>controller.LogOutController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>LogOutController</servlet-name>
+        <url-pattern>/logOutController</url-pattern>
+    </servlet-mapping>
+
+    <!-- FILTERS -->
+    <filter>
+        <filter-name>CharsetFilter</filter-name>
+        <filter-class>filter.CharsetFilter</filter-class>
+        <init-param>
+            <param-name>characterEncoding</param-name>
+            <param-value>utf-8</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>CharsetFilter</filter-name>
+        <url-pattern>/signIn</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>CharsetFilter</filter-name>
+        <url-pattern>/register</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>CharsetFilter</filter-name>
+        <url-pattern>/patientsTable</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>CharsetFilter</filter-name>
+        <url-pattern>/addPatient</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>CharsetFilter</filter-name>
+        <url-pattern>/doctorsTable</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>CharsetFilter</filter-name>
+        <url-pattern>/addDoctor</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>CharsetFilter</filter-name>
+        <url-pattern>/clinicalRecordsTable</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>CharsetFilter</filter-name>
+        <url-pattern>/addClinicalRecord</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>CharsetFilter</filter-name>
+        <url-pattern>/changeClinicalRecord</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>CharsetFilter</filter-name>
+        <url-pattern>/changeClinicalRecordController</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>CharsetFilter</filter-name>
+        <url-pattern>/navigationBar</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>CharsetFilter</filter-name>
+        <url-pattern>/</url-pattern>
+    </filter-mapping>
+
+    <!-- LISTENERS -->
+    <listener>
+        <listener-class>listener.LogListener</listener-class>
+    </listener>
+
+</web-app>
