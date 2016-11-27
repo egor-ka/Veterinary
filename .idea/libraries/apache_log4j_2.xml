@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="apache-log4j-2">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/libs/apache-log4j-2.7-bin" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/libs/apache-log4j-2.7-bin" />
+    </SOURCES>
+    <jarDirectory url="file://$PROJECT_DIR$/libs/apache-log4j-2.7-bin" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/libs/apache-log4j-2.7-bin" recursive="false" type="SOURCES" />
+  </library>
+</component>

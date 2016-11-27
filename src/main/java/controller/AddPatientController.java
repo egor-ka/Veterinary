@@ -8,6 +8,7 @@ import exception.SomeException;
 import model.Patient;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,12 +16,13 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
  * Created by Egor on 13.11.2016.
  */
+
+@WebServlet("/addPatientController")
 public class AddPatientController extends HttpServlet {
 
     private static final String ERROR_MESSAGES_ATTRIBUTE = "error_messages_patients_table";
@@ -49,7 +51,7 @@ public class AddPatientController extends HttpServlet {
             messages.put("patientsTable", "Patient successfully added");
         }
         request.getSession().setAttribute(ERROR_MESSAGES_ATTRIBUTE, messages);
-        response.sendRedirect("/patientsTableController");
+        response.sendRedirect("./patientsTableController");
     }
 
     private int inputPatient(HttpServletRequest request, HttpServletResponse response,
@@ -61,7 +63,6 @@ public class AddPatientController extends HttpServlet {
             return patientDao.insert(patient);
         } catch (SomeException | ConnectionPoolException | SQLException e) {
             messages.put("patientsTable", "Could not add patient, due to connection problems, try again later");
-            request.getSession().setAttribute(ERROR_MESSAGES_ATTRIBUTE, messages);
             ExceptionLogger.connectionException("InputPatient - connection problem", e);
             return -1;
         }

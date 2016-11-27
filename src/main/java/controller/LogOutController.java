@@ -1,6 +1,7 @@
 package controller;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -9,6 +10,8 @@ import java.io.IOException;
 /**
  * Created by Egor on 06.11.2016.
  */
+
+@WebServlet("/logOutController")
 public class LogOutController extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
@@ -24,6 +27,6 @@ public class LogOutController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html");
 
-        request.getRequestDispatcher("/signIn").forward(request, response);
+        request.getRequestDispatcher("./signIn").forward(request, response);
     }
 }

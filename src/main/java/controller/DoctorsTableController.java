@@ -8,6 +8,7 @@ import exception.SomeException;
 import model.Doctor;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,6 +22,8 @@ import java.util.Map;
 /**
  * Created by Egor on 11.11.2016.
  */
+
+@WebServlet("/doctorsTableController")
 public class DoctorsTableController extends HttpServlet{
     
     private static final String DOCTORS_TABLE_ATTRIBUTE = "doctors_table";
@@ -39,17 +42,31 @@ public class DoctorsTableController extends HttpServlet{
         Map<String, String> messages = new HashMap<>();
         response.setContentType("text/html");
 
+        if (request.getParameter("buttonExtraFeatures") != null) {
+            Object attribute = request.getSession().getAttribute("extraFeaturesDoctors");
+            if (attribute != null) {
+                if (attribute.toString() == "true") {
+                    request.getSession().setAttribute("extraFeaturesDoctors", false);
+                } else {
+                    request.getSession().setAttribute("extraFeaturesDoctors", true);
+                }
+            } else {
+                request.getSession().setAttribute("extraFeaturesDoctors", true);
+            }
+        }
+        
         List<Doctor> doctors = getAllDoctors(request, response, messages);
         if (doctors == null) {
+            request.getSession().setAttribute(ERROR_MESSAGES_ATTRIBUTE, messages);
+            response.sendRedirect("./doctorsTable");
             return;
         }
         if (doctors.size() == 0) {
             messages.put("doctorsTable", "There are no current doctors");
         }
         request.getSession().setAttribute(DOCTORS_TABLE_ATTRIBUTE, doctors);
-
         request.getSession().setAttribute(ERROR_MESSAGES_ATTRIBUTE, messages);
-        response.sendRedirect("/doctorsTable");
+        response.sendRedirect("./doctorsTable");
     }
 
     private List<Doctor> getAllDoctors(HttpServletRequest request, HttpServletResponse response,
@@ -60,9 +77,8 @@ public class DoctorsTableController extends HttpServlet{
             return doctorDao.getAll();
         } catch (SQLException | ConnectionPoolException | SomeException e) {
             messages.put("doctorsTable", "Could not load doctors, please try again later");
-            request.getSession().setAttribute(ERROR_MESSAGES_ATTRIBUTE, messages);
             ExceptionLogger.connectionException("GetAllDoctors - connection problem", e);
-            response.sendRedirect("/doctorsTable");
+            response.sendRedirect("./doctorsTable");
             return null;
         }
     }

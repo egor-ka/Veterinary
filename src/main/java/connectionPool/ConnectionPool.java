@@ -1,6 +1,7 @@
 package connectionPool;
 
 import exception.ConnectionPoolException;
+import org.apache.log4j.Logger;
 
 import java.sql.*;
 import java.util.Map;
@@ -24,6 +25,8 @@ public class ConnectionPool {
 
     private BlockingQueue<Connection> connectionQueue;
     private BlockingQueue<Connection> givenAwayConnectionQueue;
+
+    public static final Logger logger = Logger.getLogger(ConnectionPool.class);
 
     private ConnectionPool() {
         try {

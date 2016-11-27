@@ -8,6 +8,7 @@ import exception.SomeException;
 import model.Doctor;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -20,6 +21,8 @@ import java.util.Map;
 /**
  * Created by Egor on 13.11.2016.
  */
+
+@WebServlet("/addDoctorController")
 public class AddDoctorController extends HttpServlet{
 
     private static final String ERROR_MESSAGES_ATTRIBUTE = "error_messages_doctors_table";
@@ -48,7 +51,7 @@ public class AddDoctorController extends HttpServlet{
             messages.put("doctorsTable", "Doctor successfully added");
         }
         request.getSession().setAttribute(ERROR_MESSAGES_ATTRIBUTE, messages);
-        response.sendRedirect("/doctorsTableController");
+        response.sendRedirect("./doctorsTableController");
     }
 
     private int inputDoctor(HttpServletRequest request, HttpServletResponse response,
@@ -60,7 +63,6 @@ public class AddDoctorController extends HttpServlet{
             return doctorDao.insert(doctor);
         } catch (SomeException | ConnectionPoolException | SQLException e) {
             messages.put("doctorsTable", "Could not add doctor, due to connection problems, try again later");
-            request.getSession().setAttribute(ERROR_MESSAGES_ATTRIBUTE, messages);
             ExceptionLogger.connectionException("InputDoctor - connection problem", e);
             return -1;
         }

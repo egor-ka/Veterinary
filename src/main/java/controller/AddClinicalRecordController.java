@@ -8,6 +8,7 @@ import exception.SomeException;
 import model.ClinicalRecord;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -20,6 +21,8 @@ import java.util.Map;
 /**
  * Created by Egor on 12.11.2016.
  */
+
+@WebServlet("/addClinicalRecordController")
 public class AddClinicalRecordController extends HttpServlet{
 
     private static final String ERROR_MESSAGES_ATTRIBUTE = "error_messages_clinical_records_table";
@@ -42,27 +45,26 @@ public class AddClinicalRecordController extends HttpServlet{
         data.put("patientId", request.getParameter("selectedPatientId"));
         data.put("prescription", request.getParameter("prescription"));
 
-        int inputElementIndex = inputClinicalRecord(request, response, messages, data);
+        int inputElementIndex = inputClinicalRecord(request, messages, data);
 
         if (inputElementIndex > 0) {
             messages.put("clinicalRecordsTable", "Clinical record successfully added");
         }
         request.getSession().setAttribute(ERROR_MESSAGES_ATTRIBUTE, messages);
-        response.sendRedirect("/clinicalRecordsTableController");
+        response.sendRedirect("./clinicalRecordsTableController");
     }
 
-    private int inputClinicalRecord(HttpServletRequest request, HttpServletResponse response,
-                                     Map<String, String> messages, Map<String, String> data)  throws ServletException, IOException {
+    private int inputClinicalRecord(HttpServletRequest request, Map<String, String> messages, Map<String, String> data)
+            throws ServletException, IOException {
         ConnectionPool connectionPool = ConnectionPool.getInstance();
         try (Connection connection = connectionPool.takeConnection()) {
             ClinicalRecordDao clinicalRecordDao = new ClinicalRecordDao(connection);
             ClinicalRecord clinicalRecord = new ClinicalRecord(Integer.parseInt(data.get("doctorId")),
                     Integer.parseInt(data.get("patientId")),
-                    data.get("prescription"));
+                    String.format("%s (выписал: %s)", data.get("prescription"), request.getSession().getAttribute("username")));
             return clinicalRecordDao.insert(clinicalRecord);
         } catch (SomeException | ConnectionPoolException | SQLException e) {
             messages.put("clinicalRecordsTable", "Could not add clinical record, due to connection problems, try again later");
-            request.getSession().setAttribute(ERROR_MESSAGES_ATTRIBUTE, messages);
             ExceptionLogger.connectionException("InputClinicalRecord - connection problem", e);
             return -1;
         }

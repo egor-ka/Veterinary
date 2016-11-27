@@ -7,6 +7,7 @@ import exception.ExceptionLogger;
 import exception.UsernameException;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.IOException;
 import java.sql.Connection;
@@ -16,6 +17,8 @@ import java.util.*;
 /**
  * Created by Egor on 05.11.2016.
  */
+
+@WebServlet("/registrationController")
 public class RegistrationController extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
@@ -43,40 +46,41 @@ public class RegistrationController extends HttpServlet {
             }
         }
         if (messages.size() == 0) {
-            if (!isPasswordEqual(request, response, messages, data)) {
-                return;
+            if (!isPasswordEqual(messages, data)) {
+                response.sendRedirect("./registration");
+            } else {
+                insertUserToDb(response, messages, data);
+                request.getRequestDispatcher("./signIn").forward(request, response);
             }
-            insertUserToDb(request, response, messages, data);
-            request.getRequestDispatcher("/signIn").forward(request, response);
+            request.getSession().setAttribute(ERROR_MESSAGES_ATTRIBUTE, messages);
             return;
         }
         request.getSession().setAttribute(ERROR_MESSAGES_ATTRIBUTE, messages);
-        response.sendRedirect("/register");
+        response.sendRedirect("./registration");
     }
 
-    private boolean isPasswordEqual(HttpServletRequest request, HttpServletResponse response,
-                                           Map<String, String> messages, Map<String, String> data) throws ServletException, IOException {
+    private boolean isPasswordEqual(Map<String, String> messages, Map<String, String> data)
+            throws ServletException, IOException {
         if (!data.get("password").equals(data.get("checkPassword"))) {
             messages.put("password", "Passwords do not match");
-            response.sendRedirect("/register");
             return false;
         }
         return true;
     }
 
-    private void insertUserToDb(HttpServletRequest request, HttpServletResponse response,
-                                Map<String, String> messages, Map<String, String> data) throws ServletException, IOException {
+    private void insertUserToDb(HttpServletResponse response, Map<String, String> messages, Map<String, String> data)
+            throws ServletException, IOException {
         ConnectionPool connectionPool = ConnectionPool.getInstance();
         try (Connection connection = connectionPool.takeConnection()) {
             AuthDataDao authDataDao = new AuthDataDao(connection);
             authDataDao.register(data.get("username"), data.get("password"), data.get("firstName"), data.get("lastName"));
         } catch (SQLException | ConnectionPoolException e) {
-            ExceptionLogger.connectionException("INSERT USER TO DB", e);
-            response.sendRedirect("/register");
+            ExceptionLogger.connectionException("InsertUserToDb", e);
+            messages.put("registration", "Service is temporarily not available, try later");
+            response.sendRedirect("./registration");
         } catch (UsernameException e) {
             messages.put("username", "Username already exists");
-            request.getSession().setAttribute(ERROR_MESSAGES_ATTRIBUTE, messages);
-            response.sendRedirect("/register");
+            response.sendRedirect("./registration");
         }
     }
 }

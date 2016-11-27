@@ -1,13 +1,14 @@
 package controller;
 
 import connectionPool.ConnectionPool;
-import dao.AccountDao;
 import dao.AuthDataDao;
 import exception.*;
-import model.Account;
 import model.AuthData;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.IOException;
 import java.sql.Connection;
@@ -18,19 +19,26 @@ import java.util.*;
  * Created by Egor on 04.11.2016.
  */
 
+@WebServlet("/signInController")
 public class SignInController extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
 
-    private static final String AUTH_DATA_ATTRIBUTE = "auth_data_attribute";
-    private static final String AUTH_ERROR_ATTRIBUTE = "auth_error";
     private static final String ERROR_MESSAGES_ATTRIBUTE = "error_messages_sign_in";
+
+    private static final Logger log = Logger.getLogger(SignInController.class);
 
     public SignInController() {
     }
 
     @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        doPost(request, response);
+    }
+
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
         Set<String> keys = new HashSet<>(Arrays.asList("username", "password"));
         Map<String, String> messages = new HashMap<>();
         Map<String, String> data = new HashMap<>();
@@ -43,39 +51,38 @@ public class SignInController extends HttpServlet {
             }
         }
         if (messages.size() == 0) {
-            if (authorizeInDb(request, data)) {
-                request.getRequestDispatcher("/clinicalRecordsTableController").forward(request, response);
-                return;
+            if (authorizeInDb(request, messages, data)) {
+                request.getRequestDispatcher("./clinicalRecordsTableController").forward(request, response);
             } else {
-                messages.put("signIn", "Authorization failed!");
-                response.sendRedirect("/signIn");
-                return;
+                response.sendRedirect("./signIn");
             }
+            request.getSession().setAttribute(ERROR_MESSAGES_ATTRIBUTE, messages);
+            return;
         }
         request.getSession().setAttribute(ERROR_MESSAGES_ATTRIBUTE, messages);
-        response.sendRedirect("/signIn");
+        response.sendRedirect("./signIn");
     }
 
-    private boolean authorizeInDb(HttpServletRequest request, Map<String, String> data) throws ServletException, IOException {
+    private boolean authorizeInDb(HttpServletRequest request, Map<String, String> messages, Map<String, String> data)
+            throws ServletException, IOException {
         ConnectionPool connectionPool = ConnectionPool.getInstance();
         try (Connection connection = connectionPool.takeConnection()) {
             AuthDataDao authDataDao = new AuthDataDao(connection);
             AuthData authData = authDataDao.authorize(data.get("username"), data.get("password"));
-            request.getSession().setAttribute(AUTH_DATA_ATTRIBUTE, authData);
-            request.getSession().setAttribute("username", data.get("username"));
+            request.getSession().setAttribute("username", authData.getUsername());
+            return true;
         } catch (SQLException | ConnectionPoolException e) {
             ExceptionLogger.connectionException("AuthorizeInDb", e);
-            request.getSession().setAttribute(AUTH_ERROR_ATTRIBUTE, "Service is temporarily not available, try later");
+            messages.put("signIn", "Service is temporarily not available, try later");
             return false;
         } catch (UsernameException e) {
             ExceptionLogger.usernameException("AuthorizeInDb", e);
-            request.getSession().setAttribute(AUTH_ERROR_ATTRIBUTE, e.getLocalizedMessage());
+            messages.put("signIn", "Wrong user name or password, try again");
             return false;
         } catch (PasswordException e) {
             ExceptionLogger.passwordException("AuthorizeInDb", e);
-            request.getSession().setAttribute(AUTH_ERROR_ATTRIBUTE, e.getLocalizedMessage());
+            messages.put("signIn", "Wrong user name or password, try again");
             return false;
         }
-        return true;
     }
 }

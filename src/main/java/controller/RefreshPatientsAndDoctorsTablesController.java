@@ -10,6 +10,7 @@ import model.Doctor;
 import model.Patient;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -23,6 +24,8 @@ import java.util.Map;
 /**
  * Created by Egor on 13.11.2016.
  */
+
+@WebServlet("/refreshPatientsAndDoctorsTablesController")
 public class RefreshPatientsAndDoctorsTablesController extends HttpServlet{
 
     private static final String PATIENTS_TABLE_ATTRIBUTE = "patients_table";
@@ -43,6 +46,8 @@ public class RefreshPatientsAndDoctorsTablesController extends HttpServlet{
         List<Patient> patients = getAllPatients(request, response, messages);
 
         if (patients == null || doctors == null) {
+            request.getSession().setAttribute(ERROR_MESSAGES_ATTRIBUTE, messages);
+            response.sendRedirect("./clinicalRecordsTable");
             return;
         }
         if (doctors.size() == 0) {
@@ -53,9 +58,8 @@ public class RefreshPatientsAndDoctorsTablesController extends HttpServlet{
         }
         request.getSession().setAttribute(DOCTORS_TABLE_ATTRIBUTE, doctors);
         request.getSession().setAttribute(PATIENTS_TABLE_ATTRIBUTE, patients);
-
         request.getSession().setAttribute(ERROR_MESSAGES_ATTRIBUTE, messages);
-        response.sendRedirect("/addClinicalRecord");
+        response.sendRedirect("./addClinicalRecord");
     }
 
     private List<Doctor> getAllDoctors(HttpServletRequest request, HttpServletResponse response,
@@ -66,9 +70,7 @@ public class RefreshPatientsAndDoctorsTablesController extends HttpServlet{
             return doctorDao.getAll();
         } catch (SQLException | ConnectionPoolException | SomeException e) {
             messages.put("doctorsTable", "Could not load doctors, please try again later");
-            request.getSession().setAttribute(ERROR_MESSAGES_ATTRIBUTE, messages);
             ExceptionLogger.connectionException("GetAllDoctors - connection problem", e);
-            response.sendRedirect("/clinicalRecordsTable");
             return null;
         }
     }
@@ -81,9 +83,7 @@ public class RefreshPatientsAndDoctorsTablesController extends HttpServlet{
             return patientDao.getAll();
         } catch (SQLException | ConnectionPoolException | SomeException e) {
             messages.put("patientsTable", "Could not load patients, please try again later");
-            request.getSession().setAttribute(ERROR_MESSAGES_ATTRIBUTE, messages);
             ExceptionLogger.connectionException("GetAllPatients - connection problem", e);
-            response.sendRedirect("/clinicalRecordsTable");
             return null;
         }
     }
