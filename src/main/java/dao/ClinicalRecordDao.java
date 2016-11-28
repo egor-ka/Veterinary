@@ -82,7 +82,8 @@ public class ClinicalRecordDao extends AbstractDao<ClinicalRecord> {
                 "P.petSpecies, P.petName, P.ownerName, " +
                 "CR.prescription " +
                 "FROM veterinary.doctors as D, veterinary.patients as P, %s as CR " +
-                "WHERE CR.doctorId=D.id and CR.patientId=P.id", getFullTableName());
+                "WHERE CR.doctorId=D.id and CR.patientId=P.id " +
+                "ORDER BY CR.id", getFullTableName());
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {

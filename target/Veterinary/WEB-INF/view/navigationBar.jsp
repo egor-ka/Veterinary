@@ -20,25 +20,25 @@
             </form>
         </td>
         <td>
-            <form action="./doctorsTableController" method="post">
+            <form action="./doctorsTableController">
                 <fmt:message key="navBar.button.show.table.doctors" var="buttonShowTableDoctors"/>
                 <input type="submit"  value="${buttonShowTableDoctors}"/>
             </form>
         </td>
         <td>
-            <form action="./patientsTableController" method="post">
+            <form action="./patientsTableController">
                 <fmt:message key="navBar.button.show.table.patients" var="buttonShowTablePatients"/>
                 <input type="submit"  value="${buttonShowTablePatients}"/>
             </form>
         </td>
         <td>
-            <form action="./clinicalRecordsTableController" method="post">
+            <form action="./clinicalRecordsTableController">
                 <fmt:message key="navBar.button.show.table.clinicalRecords" var="buttonShowTableClinicalRecords"/>
                 <input type="submit"  value="${buttonShowTableClinicalRecords}"/>
             </form>
         </td>
         <td>
-            <form action="./logOutController" method="post">
+            <form action="./logOutController">
                 <fmt:message key="navBar.button.logout" var="buttonLogOut"/>
                 <input type="submit" value="${buttonLogOut}"/>
             </form>

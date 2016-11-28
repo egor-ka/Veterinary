@@ -31,11 +31,6 @@ public class AddClinicalRecordController extends HttpServlet{
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        doPost(request, response);
-    }
-
-    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Map<String, String> messages = new HashMap<>();
         Map<String, String> data = new HashMap<>();
@@ -48,7 +43,7 @@ public class AddClinicalRecordController extends HttpServlet{
         int inputElementIndex = inputClinicalRecord(request, messages, data);
 
         if (inputElementIndex > 0) {
-            messages.put("clinicalRecordsTable", "Clinical record successfully added");
+            messages.put("clinicalRecordsTable", "clinicalRecordsTable.message.success.add.clinicalRecord");
         }
         request.getSession().setAttribute(ERROR_MESSAGES_ATTRIBUTE, messages);
         response.sendRedirect("./clinicalRecordsTableController");
@@ -61,10 +56,10 @@ public class AddClinicalRecordController extends HttpServlet{
             ClinicalRecordDao clinicalRecordDao = new ClinicalRecordDao(connection);
             ClinicalRecord clinicalRecord = new ClinicalRecord(Integer.parseInt(data.get("doctorId")),
                     Integer.parseInt(data.get("patientId")),
-                    String.format("%s (выписал: %s)", data.get("prescription"), request.getSession().getAttribute("username")));
+                    String.format("%s (выписал(а): %s)", data.get("prescription"), request.getSession().getAttribute("username")));
             return clinicalRecordDao.insert(clinicalRecord);
         } catch (SomeException | ConnectionPoolException | SQLException e) {
-            messages.put("clinicalRecordsTable", "Could not add clinical record, due to connection problems, try again later");
+            messages.put("clinicalRecordsTable", "clinicalRecordsTable.message.fail.add.clinicalRecord");
             ExceptionLogger.connectionException("InputClinicalRecord - connection problem", e);
             return -1;
         }

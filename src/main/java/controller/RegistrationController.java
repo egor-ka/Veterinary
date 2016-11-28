@@ -28,12 +28,8 @@ public class RegistrationController extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        doPost(request, response);
-    }
-
-    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("text/html");
         Set<String> keys = new HashSet<>(Arrays.asList("firstName", "lastName", "username", "password", "checkPassword"));
         Map<String, String> messages = new HashMap<>();
         Map<String, String> data = new HashMap<>();
@@ -42,15 +38,16 @@ public class RegistrationController extends HttpServlet {
             if (value != null && !value.isEmpty()) {
                 data.put(key, value);
             } else {
-                messages.put(key, "Please enter " + key);
+                messages.put(key, "registration.message.empty." + key);
             }
         }
         if (messages.size() == 0) {
             if (!isPasswordEqual(messages, data)) {
                 response.sendRedirect("./registration");
             } else {
-                insertUserToDb(response, messages, data);
-                request.getRequestDispatcher("./signIn").forward(request, response);
+                if (insertUserToDb(response, messages, data)) {
+                    response.sendRedirect("./signIn");
+                }
             }
             request.getSession().setAttribute(ERROR_MESSAGES_ATTRIBUTE, messages);
             return;
@@ -62,25 +59,28 @@ public class RegistrationController extends HttpServlet {
     private boolean isPasswordEqual(Map<String, String> messages, Map<String, String> data)
             throws ServletException, IOException {
         if (!data.get("password").equals(data.get("checkPassword"))) {
-            messages.put("password", "Passwords do not match");
+            messages.put("password", "registration.message.wrong.checkPassword");
             return false;
         }
         return true;
     }
 
-    private void insertUserToDb(HttpServletResponse response, Map<String, String> messages, Map<String, String> data)
+    private boolean insertUserToDb(HttpServletResponse response, Map<String, String> messages, Map<String, String> data)
             throws ServletException, IOException {
         ConnectionPool connectionPool = ConnectionPool.getInstance();
         try (Connection connection = connectionPool.takeConnection()) {
             AuthDataDao authDataDao = new AuthDataDao(connection);
             authDataDao.register(data.get("username"), data.get("password"), data.get("firstName"), data.get("lastName"));
+            return true;
         } catch (SQLException | ConnectionPoolException e) {
             ExceptionLogger.connectionException("InsertUserToDb", e);
-            messages.put("registration", "Service is temporarily not available, try later");
+            messages.put("registration", "registration.message.fail.register");
             response.sendRedirect("./registration");
+            return false;
         } catch (UsernameException e) {
-            messages.put("username", "Username already exists");
+            messages.put("username", "registration.message.fail.existing.username");
             response.sendRedirect("./registration");
+            return false;
         }
     }
 }

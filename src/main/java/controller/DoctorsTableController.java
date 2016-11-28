@@ -34,14 +34,8 @@ public class DoctorsTableController extends HttpServlet{
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        doPost(request, response);
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Map<String, String> messages = new HashMap<>();
         response.setContentType("text/html");
-
         if (request.getParameter("buttonExtraFeatures") != null) {
             Object attribute = request.getSession().getAttribute("extraFeaturesDoctors");
             if (attribute != null) {
@@ -54,7 +48,6 @@ public class DoctorsTableController extends HttpServlet{
                 request.getSession().setAttribute("extraFeaturesDoctors", true);
             }
         }
-        
         List<Doctor> doctors = getAllDoctors(request, response, messages);
         if (doctors == null) {
             request.getSession().setAttribute(ERROR_MESSAGES_ATTRIBUTE, messages);
@@ -62,7 +55,7 @@ public class DoctorsTableController extends HttpServlet{
             return;
         }
         if (doctors.size() == 0) {
-            messages.put("doctorsTable", "There are no current doctors");
+            messages.put("doctorsTable", "doctorsTable.message.empty.doctors");
         }
         request.getSession().setAttribute(DOCTORS_TABLE_ATTRIBUTE, doctors);
         request.getSession().setAttribute(ERROR_MESSAGES_ATTRIBUTE, messages);
@@ -76,7 +69,7 @@ public class DoctorsTableController extends HttpServlet{
             DoctorDao doctorDao = new DoctorDao(connection);
             return doctorDao.getAll();
         } catch (SQLException | ConnectionPoolException | SomeException e) {
-            messages.put("doctorsTable", "Could not load doctors, please try again later");
+            messages.put("doctorsTable", "doctorsTable.message.fail.load.doctors");
             ExceptionLogger.connectionException("GetAllDoctors - connection problem", e);
             response.sendRedirect("./doctorsTable");
             return null;

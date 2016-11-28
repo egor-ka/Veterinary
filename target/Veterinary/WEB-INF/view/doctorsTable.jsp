@@ -17,13 +17,17 @@
         <fmt:message key="doctorsTable.button.add.doctor" var="buttonAddDoctor"/>
         <input type="submit" value="${buttonAddDoctor}" />
     </form>
-    <form action="./doctorsTableController" method="post">
+    <form action="./doctorsTableController" method="get">
         <fmt:message key="doctorsTable.button.extraFeatures" var="buttonExtraFeatures"/>
         <input type="submit" name="buttonExtraFeatures" value="${buttonExtraFeatures}"/>
     </form>
     <c:choose>
         <c:when test="${empty doctors_table}">
-            <label style="color:red">${sessionScope["error_messages_doctors_table"]["doctorsTable"]}</label>
+            <label style="color:red">
+                <c:if test="${not empty sessionScope['error_messages_doctors_table']['doctorsTable']}">
+                    <fmt:message key="${sessionScope['error_messages_doctors_table']['doctorsTable']}"/>
+                </c:if>
+            </label>
             <br/>
         </c:when>
         <c:otherwise>

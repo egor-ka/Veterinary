@@ -31,20 +31,13 @@ public class DeleteDoctorController extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        doPost(request, response);
-    }
-
-    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Map<String, String> messages = new HashMap<>();
         response.setContentType("text/html");
-
         int id = Integer.parseInt(request.getParameter("doctorId"));
         boolean result = deleteDoctor(messages, id);
-
         if (result == true) {
-            messages.put("doctorsTable", "Doctor successfully deleted");
+            messages.put("doctorsTable", "doctorsTable.message.success.delete.doctor");
         }
         request.getSession().setAttribute(ERROR_MESSAGES_ATTRIBUTE, messages);
         response.sendRedirect("./doctorsTableController");
@@ -58,7 +51,7 @@ public class DeleteDoctorController extends HttpServlet {
             doctorDao.delete(doctor);
             return true;
         } catch (SomeException | ConnectionPoolException | SQLException e) {
-            messages.put("doctorsTable", "Could not delete doctor, due to connection problems, try again later");
+            messages.put("doctorsTable", "doctorsTable.message.fail.delete.doctor");
             ExceptionLogger.connectionException("DeleteDoctor - connection problem", e);
             return false;
         }

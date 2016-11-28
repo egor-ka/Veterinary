@@ -34,14 +34,8 @@ public class PatientsTableController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        doPost(request, response);
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Map<String, String> messages = new HashMap<>();
         response.setContentType("text/html");
-
         if (request.getParameter("buttonExtraFeatures") != null) {
             Object attribute = request.getSession().getAttribute("extraFeaturesPatients");
             if (attribute != null) {
@@ -54,16 +48,14 @@ public class PatientsTableController extends HttpServlet {
                 request.getSession().setAttribute("extraFeaturesPatients", true);
             }
         }
-        
         List<Patient> patients = getAllPatients(request, response, messages);
-
         if (patients == null) {
             request.getSession().setAttribute(ERROR_MESSAGES_ATTRIBUTE, messages);
             response.sendRedirect("./patientsTable");
             return;
         }
         if (patients.size() == 0) {
-            messages.put("patientsTable", "There are no current patients");
+            messages.put("patientsTable", "patientsTable.message.empty.patients");
         }
         request.getSession().setAttribute(PATIENTS_TABLE_ATTRIBUTE, patients);
         request.getSession().setAttribute(ERROR_MESSAGES_ATTRIBUTE, messages);
@@ -77,7 +69,7 @@ public class PatientsTableController extends HttpServlet {
             PatientDao patientDao = new PatientDao(connection);
             return patientDao.getAll();
         } catch (SQLException | ConnectionPoolException | SomeException e) {
-            messages.put("patientsTable", "Could not load patients, please try again later");
+            messages.put("patientsTable", "patientsTable.message.fail.load.patients");
             ExceptionLogger.connectionException("GetAllPatients - connection problem", e);
             response.sendRedirect("./patientsTable");
             return null;

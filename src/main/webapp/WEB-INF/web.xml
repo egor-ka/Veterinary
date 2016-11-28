@@ -16,6 +16,16 @@
         <url-pattern>/signIn</url-pattern>
     </servlet-mapping>
 
+    <!-- Navigation bar - page part -->
+    <servlet>
+        <servlet-name>LanguageBar</servlet-name>
+        <jsp-file>/WEB-INF/view/languageBar.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>LanguageBar</servlet-name>
+        <url-pattern>/languageBar</url-pattern>
+    </servlet-mapping>
+
     <!-- Registration Page -->
     <servlet>
         <servlet-name>Registration</servlet-name>

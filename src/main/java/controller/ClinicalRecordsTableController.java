@@ -32,14 +32,8 @@ public class ClinicalRecordsTableController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        doPost(request, response);
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Map<String, String> messages = new HashMap<>();
         response.setContentType("text/html");
-
         if (request.getParameter("buttonExtraFeatures") != null) {
             Object attribute = request.getSession().getAttribute("extraFeaturesClinicalRecords");
             if (attribute != null) {
@@ -52,29 +46,26 @@ public class ClinicalRecordsTableController extends HttpServlet {
                 request.getSession().setAttribute("extraFeaturesClinicalRecords", true);
             }
         }
-
-        List<List<String>> fullClinicalRecords = getAllClinicalRecords(request, response, messages);
+        List<List<String>> fullClinicalRecords = getAllClinicalRecords(response, messages);
         if (fullClinicalRecords == null) {
             request.getSession().setAttribute(ERROR_MESSAGES_ATTRIBUTE, messages);
-            response.sendRedirect("./clinicalRecordsTable");
             return;
         }
         if (fullClinicalRecords.size() == 0) {
-            messages.put("clinicalRecordsTable", "There are no current clinicalRecords");
+            messages.put("clinicalRecordsTable", "clinicalRecordsTable.message.empty.clinicalRecords");
         }
         request.getSession().setAttribute(CLINICAL_RECORDS_TABLE_ATTRIBUTE, fullClinicalRecords);
         request.getSession().setAttribute(ERROR_MESSAGES_ATTRIBUTE, messages);
         response.sendRedirect("./clinicalRecordsTable");
     }
 
-    private List<List<String>> getAllClinicalRecords(HttpServletRequest request, HttpServletResponse response,
-                                                       Map<String, String> messages) throws ServletException, IOException {
+    private List<List<String>> getAllClinicalRecords(HttpServletResponse response, Map<String, String> messages) throws ServletException, IOException {
         ConnectionPool connectionPool = ConnectionPool.getInstance();
         try (Connection connection = connectionPool.takeConnection()) {
             ClinicalRecordDao clinicalRecordDao = new ClinicalRecordDao(connection);
             return clinicalRecordDao.getAllFullRecords();
         } catch (SQLException | ConnectionPoolException | SomeException e) {
-            messages.put("clinicalRecordsTable", "Could not load clinical records, please try again later");
+            messages.put("clinicalRecordsTable", "clinicalRecordsTable.message.fail.load.clinicalRecords");
             ExceptionLogger.connectionException("GetAllClinicalRecords - connection problem", e);
             response.sendRedirect("./clinicalRecordsTable");
             return null;

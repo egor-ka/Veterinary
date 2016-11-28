@@ -17,7 +17,7 @@
     <form action="./addDoctorController" method="post">
         <label for="firstName"><fmt:message key="addDoctor.label.firstName"/>:</label>
         <br/>
-        <input type="text" id="firstName" name="firstName" required=<fmt:message key="addDoctor.required"/>>
+        <input type="text" id="firstName" name="firstName" required>
         <br/>
 
         <label for="lastName"><fmt:message key="addDoctor.label.lastName"/>:</label>

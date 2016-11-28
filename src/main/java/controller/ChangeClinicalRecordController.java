@@ -31,22 +31,15 @@ public class ChangeClinicalRecordController  extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        doPost(request, response);
-    }
-
-    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("text/html");
         Map<String, String> messages = new HashMap<>();
         Map<String, String> data = new HashMap<>();
-        response.setContentType("text/html");
-
         data.put("prescription", request.getParameter("prescription"));
         data.put("id", request.getParameter("clinicalRecordIdChange"));
         int updatedElementIndex = changeClinicalRecord(request, messages, data);
-
         if (updatedElementIndex > 0) {
-            messages.put("clinicalRecordsTable", "Clinical record successfully changed");
+            messages.put("clinicalRecordsTable", "clinicalRecordsTable.message.success.change.clinicalRecord");
         }
         request.getSession().setAttribute(ERROR_MESSAGES_ATTRIBUTE, messages);
         response.sendRedirect("./clinicalRecordsTableController");
@@ -58,14 +51,12 @@ public class ChangeClinicalRecordController  extends HttpServlet {
         try (Connection connection = connectionPool.takeConnection()) {
             ClinicalRecordDao clinicalRecordDao = new ClinicalRecordDao(connection);
             ClinicalRecord clinicalRecord = clinicalRecordDao.getById(Integer.parseInt(data.get("id")));
-
-            String user = (String)request.getSession().getAttribute("username");
-            //TODO: СДЕЛАТЬ ПРОВЕРКУ НА ТО, ЕСТЬ ЛИ ЮЗЕР В БАЗЕ ДОКТОРОВ
-            String editedPrescription = String.format("%s; %s (выписал: %s)", clinicalRecord.getPrescription(), data.get("prescription"), user);
+            String editedPrescription = String.format("%s; %s (выписал(а): %s %s)", clinicalRecord.getPrescription(), data.get("prescription"),
+                    request.getSession().getAttribute("firstName").toString(), request.getSession().getAttribute("lastName").toString());
             clinicalRecord.setPrescription(editedPrescription);
             return clinicalRecordDao.update(clinicalRecord);
         } catch (SomeException | ConnectionPoolException | SQLException e) {
-            messages.put("clinicalRecordsTable", "Could not change clinical record, due to connection problems, try again later");
+            messages.put("clinicalRecordsTable", "clinicalRecordsTable.message.fail.change.clinicalRecord");
             ExceptionLogger.connectionException("ChangeClinicalRecord - connection problem", e);
             return -1;
         }

@@ -31,11 +31,6 @@ public class AddDoctorController extends HttpServlet{
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        doPost(request, response);
-    }
-
-    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Map<String, String> messages = new HashMap<>();
         Map<String, String> data = new HashMap<>();
@@ -48,7 +43,7 @@ public class AddDoctorController extends HttpServlet{
         int inputElementIndex = inputDoctor(request, response, messages, data);
 
         if (inputElementIndex > 0) {
-            messages.put("doctorsTable", "Doctor successfully added");
+            messages.put("doctorsTable", "doctorsTable.message.success.add.doctor");
         }
         request.getSession().setAttribute(ERROR_MESSAGES_ATTRIBUTE, messages);
         response.sendRedirect("./doctorsTableController");
@@ -62,7 +57,7 @@ public class AddDoctorController extends HttpServlet{
             Doctor doctor = new Doctor(data.get("firstName"), data.get("lastName"), data.get("specialization"));
             return doctorDao.insert(doctor);
         } catch (SomeException | ConnectionPoolException | SQLException e) {
-            messages.put("doctorsTable", "Could not add doctor, due to connection problems, try again later");
+            messages.put("doctorsTable", "doctorsTable.message.fail.add.doctor");
             ExceptionLogger.connectionException("InputDoctor - connection problem", e);
             return -1;
         }

@@ -26,19 +26,12 @@ public class SignInController extends HttpServlet {
 
     private static final String ERROR_MESSAGES_ATTRIBUTE = "error_messages_sign_in";
 
-    private static final Logger log = Logger.getLogger(SignInController.class);
-
     public SignInController() {
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        doPost(request, response);
-    }
-
-    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+        response.setContentType("text/html");
         Set<String> keys = new HashSet<>(Arrays.asList("username", "password"));
         Map<String, String> messages = new HashMap<>();
         Map<String, String> data = new HashMap<>();
@@ -47,12 +40,12 @@ public class SignInController extends HttpServlet {
             if (value != null && !value.isEmpty()) {
                 data.put(key, value);
             } else {
-                messages.put(key, "Please enter " + key);
+                messages.put(key, "signIn.message.enter." + key);
             }
         }
         if (messages.size() == 0) {
             if (authorizeInDb(request, messages, data)) {
-                request.getRequestDispatcher("./clinicalRecordsTableController").forward(request, response);
+                response.sendRedirect("./clinicalRecordsTableController");
             } else {
                 response.sendRedirect("./signIn");
             }
@@ -73,15 +66,15 @@ public class SignInController extends HttpServlet {
             return true;
         } catch (SQLException | ConnectionPoolException e) {
             ExceptionLogger.connectionException("AuthorizeInDb", e);
-            messages.put("signIn", "Service is temporarily not available, try later");
+            messages.put("signIn", "signIn.message.fail.connection");
             return false;
         } catch (UsernameException e) {
             ExceptionLogger.usernameException("AuthorizeInDb", e);
-            messages.put("signIn", "Wrong user name or password, try again");
+            messages.put("signIn", "signIn.message.wrong.authData");
             return false;
         } catch (PasswordException e) {
             ExceptionLogger.passwordException("AuthorizeInDb", e);
-            messages.put("signIn", "Wrong user name or password, try again");
+            messages.put("signIn", "signIn.message.wrong.authData");
             return false;
         }
     }

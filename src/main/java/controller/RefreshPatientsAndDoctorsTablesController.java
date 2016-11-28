@@ -34,11 +34,6 @@ public class RefreshPatientsAndDoctorsTablesController extends HttpServlet{
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        doPost(request, response);
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Map<String, String> messages = new HashMap<>();
         response.setContentType("text/html");
 
@@ -51,10 +46,10 @@ public class RefreshPatientsAndDoctorsTablesController extends HttpServlet{
             return;
         }
         if (doctors.size() == 0) {
-            messages.put("doctorsTable", "There are no current doctors - please hire some, so you can do clinical records");
+            messages.put("doctorsTable", "clinicalRecordsTable.message.empty.doctors");
         }
         if (patients.size() == 0) {
-            messages.put("patientsTable", "There are no current patients - there is no one to  receive treatment");
+            messages.put("patientsTable", "clinicalRecordsTable.message.empty.patients");
         }
         request.getSession().setAttribute(DOCTORS_TABLE_ATTRIBUTE, doctors);
         request.getSession().setAttribute(PATIENTS_TABLE_ATTRIBUTE, patients);
@@ -69,7 +64,7 @@ public class RefreshPatientsAndDoctorsTablesController extends HttpServlet{
             DoctorDao doctorDao = new DoctorDao(connection);
             return doctorDao.getAll();
         } catch (SQLException | ConnectionPoolException | SomeException e) {
-            messages.put("doctorsTable", "Could not load doctors, please try again later");
+            messages.put("doctorsTable", "clinicalRecordsTable.message.fail.load.doctors");
             ExceptionLogger.connectionException("GetAllDoctors - connection problem", e);
             return null;
         }
@@ -82,7 +77,7 @@ public class RefreshPatientsAndDoctorsTablesController extends HttpServlet{
             PatientDao patientDao = new PatientDao(connection);
             return patientDao.getAll();
         } catch (SQLException | ConnectionPoolException | SomeException e) {
-            messages.put("patientsTable", "Could not load patients, please try again later");
+            messages.put("patientsTable", "clinicalRecordsTable.message.fail.load.patients");
             ExceptionLogger.connectionException("GetAllPatients - connection problem", e);
             return null;
         }

@@ -63,7 +63,6 @@ create table veterinary.doctors (
 	primary key (id)
 ) default charset=utf8;
 
-INSERT INTO veterinary.doctors(firstName,lastName,specialization)VALUES("Леонид", "Брежнев", "Администратор");
 INSERT INTO veterinary.doctors(firstName,lastName,specialization)VALUES("Бет", "Санчез", "Лошадиный хирург");
 INSERT INTO veterinary.doctors(firstName,lastName,specialization)VALUES("Василий", "Хамелеонович", "Психотерапевт");
 INSERT INTO veterinary.doctors(firstName,lastName,specialization)VALUES("Екатерина", "Лисичкова", "Медсестра");
@@ -82,17 +81,17 @@ create table veterinary.clinicalRecords (
     foreign key (patientId) references veterinary.patients (id)
 ) default charset=utf8;
 
-INSERT INTO veterinary.clinicalrecords(doctorId,patientId,prescription)VALUES(2,1,"Операция на сердце");
-INSERT INTO veterinary.clinicalrecords(doctorId,patientId,prescription)VALUES(3,5,"Маниакальное желание сгореть в машине");
-INSERT INTO veterinary.clinicalrecords(doctorId,patientId,prescription)VALUES(8,3,"Инородный предмет в горле");
-INSERT INTO veterinary.clinicalrecords(doctorId,patientId,prescription)VALUES(6,2,"Извлечение рыболовного крючка из губы");
-INSERT INTO veterinary.clinicalrecords(doctorId,patientId,prescription)VALUES(5,10,"Подбор очков");
-INSERT INTO veterinary.clinicalrecords(doctorId,patientId,prescription)VALUES(7,11,"Подобрать строгую диету");
-INSERT INTO veterinary.clinicalrecords(doctorId,patientId,prescription)VALUES(4,6,"Поставить клизму");
-INSERT INTO veterinary.clinicalrecords(doctorId,patientId,prescription)VALUES(3,9,"Разговор о принятии скорой смерти");
-INSERT INTO veterinary.clinicalrecords(doctorId,patientId,prescription)VALUES(7,14,"Составить план перехода с человечины на зернышки");
-INSERT INTO veterinary.clinicalrecords(doctorId,patientId,prescription)VALUES(6,8,"Вытаскивание иголок дикобраза отовсюду");
-INSERT INTO veterinary.clinicalrecords(doctorId,patientId,prescription)VALUES(4,12,"Профилактическое почесывание");
+INSERT INTO veterinary.clinicalrecords(doctorId,patientId,prescription)VALUES(2,1,"Операция на сердце (выписал(а): Екатерина Лисичкова)");
+INSERT INTO veterinary.clinicalrecords(doctorId,patientId,prescription)VALUES(3,5,"Маниакальное желание сгореть в машине (выписал(а): Екатерина Лисичкова)");
+INSERT INTO veterinary.clinicalrecords(doctorId,patientId,prescription)VALUES(8,3,"Инородный предмет в горле (выписал(а): Екатерина Лисичкова)");
+INSERT INTO veterinary.clinicalrecords(doctorId,patientId,prescription)VALUES(6,2,"Извлечение рыболовного крючка из губы (выписал(а): Екатерина Лисичкова)");
+INSERT INTO veterinary.clinicalrecords(doctorId,patientId,prescription)VALUES(5,10,"Подбор очков (выписал(а): Екатерина Лисичкова)");
+INSERT INTO veterinary.clinicalrecords(doctorId,patientId,prescription)VALUES(7,11,"Подобрать строгую диету (выписал(а):  Екатерина Лисичкова)");
+INSERT INTO veterinary.clinicalrecords(doctorId,patientId,prescription)VALUES(4,6,"Поставить клизму (выписал(а): Медсестра - Екатерина Лисичкова)");
+INSERT INTO veterinary.clinicalrecords(doctorId,patientId,prescription)VALUES(3,9,"Разговор о принятии скорой смерти (выписал(а): Екатерина Лисичкова)");
+INSERT INTO veterinary.clinicalrecords(doctorId,patientId,prescription)VALUES(7,14,"Составить план перехода с человечины на зернышки (выписал(а): Екатерина Лисичкова)");
+INSERT INTO veterinary.clinicalrecords(doctorId,patientId,prescription)VALUES(6,8,"Вытаскивание иголок дикобраза отовсюду (выписал(а): Екатерина Лисичкова)");
+INSERT INTO veterinary.clinicalrecords(doctorId,patientId,prescription)VALUES(4,12,"Профилактическое почесывание (выписал(а): Екатерина Лисичкова)");
 
 SELECT concat(D.firstName, " ", D.lastName) as fullName, D.specialization,
 P.petSpecies, P.petName, P.ownerName, 

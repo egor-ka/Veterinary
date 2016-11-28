@@ -12,31 +12,39 @@
     <title>Sign in</title>
 </head>
 <body>
-    <form>
-        <select id="language" name="language" onchange="submit()">
-            <option value="en_US" ${language == 'en_US' ? 'selected' : ''}>EN</option>
-            <option value="ru_RU" ${language == 'ru_RU' ? 'selected' : ''}>РУ</option>
-        </select>
-    </form>
+    <c:import url="/languageBar"/>
+
     <form action="./signInController" method="post">
         <label for="username"><fmt:message key="signIn.label.username"/>:</label>
         <br/>
         <input type="text" id="username" name="username" value=""/>
-        <label style="color:red">${sessionScope["error_messages_sign_in"]["username"]}</label>
+        <label style="color:red">
+            <c:if test="${not empty sessionScope['error_messages_sign_in']['username']}">
+                <fmt:message key="${sessionScope['error_messages_sign_in']['username']}"/>
+            </c:if>
+        </label>
         <br/>
         <label for="password"><fmt:message key="signIn.label.password"/>:</label>
         <br/>
         <input type="password" id="password" name="password" value=""/>
-        <label style="color:red">${sessionScope["error_messages_sign_in"]["password"]}</label>
+        <label style="color:red">
+            <c:if test="${not empty sessionScope['error_messages_sign_in']['password']}">
+                <fmt:message key="${sessionScope['error_messages_sign_in']['password']}"/>
+            </c:if>
+        </label>
         <br/>
         <fmt:message key="signIn.button.send" var="buttonSend"/>
         <input type="submit" value="${buttonSend}" />
         <br/>
-        <label style="color:red">${sessionScope["error_messages_sign_in"]["signIn"]}</label>
+        <label style="color:red">
+            <c:if test="${not empty sessionScope['error_messages_sign_in']['signIn']}">
+                <fmt:message key="${sessionScope['error_messages_sign_in']['signIn']}"/>
+            </c:if>
+        </label>
     </form>
-    <form action="./registration" method="post">
-        <fmt:message key="signIn.button.register" var="buttonRegister"/>
-        <input type="submit" value="${buttonRegister}" />
+    <form action="./registration">
+        <fmt:message key="signIn.button.registration" var="buttonRegistration"/>
+        <input type="submit" value="${buttonRegistration}" />
         <br/>
     </form>
 </body>
