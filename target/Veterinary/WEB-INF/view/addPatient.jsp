@@ -34,7 +34,7 @@
                     <input type="text" class="form-control" id="petSpecies" name="petSpecies" required>
                 </div>
             </form>
-            <form action="./patientsTable" id="goBack"></form>
+            <form action="./patientsTableController" id="goBack" method="post"></form>
             <p>
                 <fmt:message key="addPatient.button.send" var="buttonAddPatient"/>
                 <button type="submit" class="btn btn-black" form="addPatient"/>${buttonAddPatient}</button>

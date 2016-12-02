@@ -30,8 +30,8 @@ public class ClinicalRecordsTableController extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        doPost(request, response);
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        doPost(req, resp);
     }
 
     @Override
@@ -81,7 +81,6 @@ public class ClinicalRecordsTableController extends HttpServlet {
         } catch (SQLException | ConnectionPoolException | SomeException e) {
             messages.put("clinicalRecordsTable", "clinicalRecordsTable.message.fail.load.clinicalRecords");
             ExceptionLogger.connectionException("GetAllClinicalRecords - connection problem", e);
-            response.sendRedirect("./clinicalRecordsTable");
             return null;
         }
     }

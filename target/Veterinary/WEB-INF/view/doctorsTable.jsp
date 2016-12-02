@@ -22,12 +22,12 @@
         <div class="container-fluid">
             <div class="row">
                 <form action="./addDoctor" id="addDoctor" method="post"></form>
-                <form action="./doctorsTableController" id="extraFeatures" method="get"></form>
+                <form action="./doctorsTableController" id="extraFeatures" method="post"></form>
                 <p>
                     <fmt:message key="doctorsTable.button.add.doctor" var="buttonAddDoctor"/>
                     <button type="submit" class="btn btn-black" form="addDoctor"/>${buttonAddDoctor}</button>
                     <fmt:message key="doctorsTable.button.extraFeatures" var="buttonExtraFeatures"/>
-                    <button type="submit" name="buttonExtraFeatures" class="btn btn-black" form="extraFeatures"/>${buttonExtraFeatures}</button>
+                    <button type="submit" name="extraFeaturesName" class="btn btn-black" form="extraFeatures" value="${extraFeaturesDoctors}"/>${buttonExtraFeatures}</button>
                 </p>
             </div>
             <div class="row">

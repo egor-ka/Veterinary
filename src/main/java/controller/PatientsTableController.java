@@ -33,20 +33,24 @@ public class PatientsTableController extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        doPost(req, resp);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Map<String, String> messages = new HashMap<>();
         if (request.getParameter("extraFeaturesName") != null) {
             String[] result = request.getParameterValues("extraFeaturesName");
             String attribute = result[0];
-            ExceptionLogger.log(attribute);
             if (attribute != null) {
                 if (attribute.equals("true")) {
-                    request.setAttribute("extraFeaturesClinicalRecords", false);
+                    request.setAttribute("extraFeaturesPatients", false);
                 } else {
-                    request.setAttribute("extraFeaturesClinicalRecords", true);
+                    request.setAttribute("extraFeaturesPatients", true);
                 }
             } else {
-                request.setAttribute("extraFeaturesClinicalRecords", true);
+                request.setAttribute("extraFeaturesPatients", true);
             }
         }
         List<Patient> patients = getAllPatients(messages);

@@ -21,7 +21,7 @@
         <c:import url="/navigationBar"/>
         <div class="container-fluid">
             <div class="row">
-                <form action="./loadPatientsAndDoctorsTablesController" id="addClinicalRecord"></form>
+                <form action="./loadPatientsAndDoctorsTablesController" id="addClinicalRecord" method="post"></form>
                 <form action="./clinicalRecordsTableController" id="extraFeatures" method="post"></form>
                 <p>
                     <fmt:message key="clinicalRecordsTable.button.add.clinicalRecord" var="buttonAddClinicalRecord"/>

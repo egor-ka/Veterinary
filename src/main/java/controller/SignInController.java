@@ -45,7 +45,7 @@ public class SignInController extends HttpServlet {
                 //TODO: CONTROLLER
                 response.sendRedirect("./clinicalRecordsTableController");
             } else {
-                response.sendRedirect("./signIn");
+                request.getRequestDispatcher("./signIn").forward(request, response);
             }
             request.setAttribute(ERROR_MESSAGES_ATTRIBUTE, messages);
             return;

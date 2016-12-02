@@ -33,7 +33,7 @@ public class LoadPatientsAndDoctorsTablesController extends HttpServlet{
     private static final String ERROR_MESSAGES_ATTRIBUTE = "error_messages_clinical_records_table";
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Map<String, String> messages = new HashMap<>();
         List<Doctor> doctors = getAllDoctors(messages);
         List<Patient> patients = getAllPatients(messages);
