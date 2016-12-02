@@ -8,68 +8,78 @@
 
 <html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Registration</title>
+    <style>
+        <%@include file="../css/bootstrap.min.css"%>
+    </style>
+    <style>
+        <%@include file="../css/styles.css"%>
+    </style>
 </head>
 <body>
-    <c:import url="/languageBar"/>
-
-    <form action="./registrationController" method="post">
-        <label for="firstName"><fmt:message key="registration.label.firstName"/>:</label>
-        <br/>
-        <input type="text" id="firstName" name="firstName" value=""/>
-        <label style="color:red">
-            <c:if test="${not empty sessionScope['error_messages_registration']['firstName']}">
-                <fmt:message key="${sessionScope['error_messages_registration']['firstName']}"/>
-            </c:if>
-        </label>
-        <br/>
-
-        <label for="lastName"><fmt:message key="registration.label.lastName"/>:</label>
-        <br/>
-        <input type="text" id="lastName" name="lastName" value=""/>
-        <label style="color:red">
-            <c:if test="${not empty sessionScope['error_messages_registration']['lastName']}">
-                <fmt:message key="${sessionScope['error_messages_registration']['lastName']}"/>
-            </c:if>
-        </label>
-        <br/>
-
-        <label for="username"><fmt:message key="registration.label.username"/>:</label>
-        <br/>
-        <input type="text" id="username" name="username" value=""/>
-        <label style="color:red">
-            <c:if test="${not empty sessionScope['error_messages_registration']['username']}">
-                <fmt:message key="${sessionScope['error_messages_registration']['username']}"/>
-            </c:if>
-        </label>
-        <br/>
-
-        <label for="password"><fmt:message key="registration.label.password"/>:</label>
-        <br/>
-        <input type="password" id="password" name="password" value=""/>
-        <label style="color:red">
-            <c:if test="${not empty sessionScope['error_messages_registration']['password']}">
-                <fmt:message key="${sessionScope['error_messages_registration']['password']}"/>
-            </c:if>
-        </label>
-        <br/>
-
-        <label for="checkPassword"><fmt:message key="registration.label.checkPassword"/>:</label>
-        <br/>
-        <input type="password" id="checkPassword" name="checkPassword" value=""/>
-        <label style="color:red">
-            <c:if test="${not empty sessionScope['error_messages_registration']['checkPassword']}">
-                <fmt:message key="${sessionScope['error_messages_registration']['checkPassword']}"/>
-            </c:if>
-        </label>
-        <br/>
-        <fmt:message key="registration.button.send" var="buttonSend"/>
-        <input type="submit" name="submit" value="${buttonSend}" />
-    </form>
-    <form action="./signIn">
-        <fmt:message key="registration.button.goBack" var="buttonGoBack"/>
-        <input type="submit"  value="${buttonGoBack}" />
-    </form>
+    <div class="container-fluid">
+        <c:import url="/languageBar"/>
+        <div class="signIn">
+            <form action="./registrationController" id="register" method="post">
+                <div class="form-group">
+                    <label for="firstName"><fmt:message key="registration.label.firstName"/>:</label>
+                    <input type="text" class="form-control" id="firstName" name="firstName"/>
+                    <c:if test="${not empty error_messages_registration.firstName}">
+                        <span class="text-danger">
+                            <fmt:message key="${error_messages_registration.firstName}"/>
+                        </span>
+                        <br/>
+                    </c:if>
+                </div>
+                <div class="form-group">
+                    <label for="lastName"><fmt:message key="registration.label.lastName"/>:</label>
+                    <input type="text" class="form-control" id="lastName" name="lastName"/>
+                    <c:if test="${not empty error_messages_registration.lastName}">
+                        <span class="text-danger">
+                            <fmt:message key="${error_messages_registration.lastName}"/>
+                        </span>
+                        <br/>
+                    </c:if>
+                </div>
+                <div class="form-group">
+                    <label for="username"><fmt:message key="registration.label.username"/>:</label>
+                    <input type="text" class="form-control" id="username" name="username"/>
+                    <c:if test="${not empty error_messages_registration.username}">
+                        <span class="text-danger">
+                            <fmt:message key="${error_messages_registration.username}"/>
+                        </span>
+                        <br/>
+                    </c:if>
+                </div>
+                <div class="form-group">
+                    <label for="password"><fmt:message key="registration.label.password"/>:</label>
+                    <input type="password" class="form-control" id="password" name="password"/>
+                    <c:if test="${not empty error_messages_registration.password}">
+                        <span class="text-danger">
+                            <fmt:message key="${error_messages_registration.password}"/>
+                        </span>
+                        <br/>
+                    </c:if>
+                </div>
+                <div class="form-group">
+                    <label for="checkPassword"><fmt:message key="registration.label.checkPassword"/>:</label>
+                    <input type="password" class="form-control" id="checkPassword" name="checkPassword"/>
+                    <span class="text-danger">
+                    <c:if test="${not empty error_messages_registration.checkPassword}">
+                        <span class="text-danger">
+                            <fmt:message key="${error_messages_registration.checkPassword}"/>
+                        </span>
+                        <br/>
+                    </c:if>
+                </div>
+            </form>
+            <form action="./signIn" id="goBack"></form>
+            <p>
+                <fmt:message key="registration.button.send" var="buttonSend"/>
+                <button type="submit" class="btn btn-black" name="submit" form="register"/>${buttonSend}</button>
+                <fmt:message key="registration.button.goBack" var="buttonGoBack"/>
+                <button type="submit" class="btn btn-black" form="goBack"/>${buttonGoBack}</button>
+            </p>
+        </div>
+    </div>
 </body>
 </html>

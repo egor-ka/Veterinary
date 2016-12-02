@@ -35,35 +35,42 @@ public class PatientsTableController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Map<String, String> messages = new HashMap<>();
-        response.setContentType("text/html");
-        if (request.getParameter("buttonExtraFeatures") != null) {
-            Object attribute = request.getSession().getAttribute("extraFeaturesPatients");
+        if (request.getParameter("extraFeaturesName") != null) {
+            String[] result = request.getParameterValues("extraFeaturesName");
+            String attribute = result[0];
+            ExceptionLogger.log(attribute);
             if (attribute != null) {
-                if (attribute.toString() == "true") {
-                    request.getSession().setAttribute("extraFeaturesPatients", false);
+                if (attribute.equals("true")) {
+                    request.setAttribute("extraFeaturesClinicalRecords", false);
                 } else {
-                    request.getSession().setAttribute("extraFeaturesPatients", true);
+                    request.setAttribute("extraFeaturesClinicalRecords", true);
                 }
             } else {
-                request.getSession().setAttribute("extraFeaturesPatients", true);
+                request.setAttribute("extraFeaturesClinicalRecords", true);
             }
         }
-        List<Patient> patients = getAllPatients(request, response, messages);
+        List<Patient> patients = getAllPatients(messages);
         if (patients == null) {
-            request.getSession().setAttribute(ERROR_MESSAGES_ATTRIBUTE, messages);
-            response.sendRedirect("./patientsTable");
+            request.setAttribute(ERROR_MESSAGES_ATTRIBUTE, messages);
+            request.getRequestDispatcher("./patientsTable").forward(request, response);
             return;
         }
         if (patients.size() == 0) {
             messages.put("patientsTable", "patientsTable.message.empty.patients");
         }
-        request.getSession().setAttribute(PATIENTS_TABLE_ATTRIBUTE, patients);
-        request.getSession().setAttribute(ERROR_MESSAGES_ATTRIBUTE, messages);
-        response.sendRedirect("./patientsTable");
+        request.setAttribute(PATIENTS_TABLE_ATTRIBUTE, patients);
+        request.setAttribute(ERROR_MESSAGES_ATTRIBUTE, messages);
+        request.getRequestDispatcher("./patientsTable").forward(request, response);
     }
 
-    private List<Patient> getAllPatients(HttpServletRequest request, HttpServletResponse response,
-                                         Map<String, String> messages) throws ServletException, IOException {
+    /**
+     * Get all Patient-class entities from DB using Dao
+     * @param messages - map of messages for output
+     * @return
+     * @throws ServletException
+     * @throws IOException
+     */
+    private List<Patient> getAllPatients(Map<String, String> messages) throws ServletException, IOException {
         ConnectionPool connectionPool = ConnectionPool.getInstance();
         try (Connection connection = connectionPool.takeConnection()) {
             PatientDao patientDao = new PatientDao(connection);
@@ -71,7 +78,6 @@ public class PatientsTableController extends HttpServlet {
         } catch (SQLException | ConnectionPoolException | SomeException e) {
             messages.put("patientsTable", "patientsTable.message.fail.load.patients");
             ExceptionLogger.connectionException("GetAllPatients - connection problem", e);
-            response.sendRedirect("./patientsTable");
             return null;
         }
     }

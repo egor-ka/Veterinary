@@ -22,44 +22,58 @@ import java.util.*;
 
 @WebServlet("/clinicalRecordsTableController")
 public class ClinicalRecordsTableController extends HttpServlet {
-    
+
     private static final String CLINICAL_RECORDS_TABLE_ATTRIBUTE = "clinical_records_table";
     private static final String ERROR_MESSAGES_ATTRIBUTE = "error_messages_clinical_records_table";
 
     public ClinicalRecordsTableController() {
     }
 
-
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        doPost(request, response);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Map<String, String> messages = new HashMap<>();
-        response.setContentType("text/html");
-        if (request.getParameter("buttonExtraFeatures") != null) {
-            Object attribute = request.getSession().getAttribute("extraFeaturesClinicalRecords");
+        if (request.getParameter("extraFeaturesName") != null) {
+            String[] result = request.getParameterValues("extraFeaturesName");
+            String attribute = result[0];
             if (attribute != null) {
-                if (attribute.toString() == "true") {
-                    request.getSession().setAttribute("extraFeaturesClinicalRecords", false);
+                if (attribute.equals("true")) {
+                    request.setAttribute("extraFeaturesClinicalRecords", false);
                 } else {
-                    request.getSession().setAttribute("extraFeaturesClinicalRecords", true);
+                    request.setAttribute("extraFeaturesClinicalRecords", true);
                 }
             } else {
-                request.getSession().setAttribute("extraFeaturesClinicalRecords", true);
+                request.setAttribute("extraFeaturesClinicalRecords", true);
             }
         }
         List<List<String>> fullClinicalRecords = getAllClinicalRecords(response, messages);
         if (fullClinicalRecords == null) {
-            request.getSession().setAttribute(ERROR_MESSAGES_ATTRIBUTE, messages);
+            request.setAttribute(ERROR_MESSAGES_ATTRIBUTE, messages);
+            request.getRequestDispatcher("./clinicalRecordsTable").forward(request, response);
             return;
         }
         if (fullClinicalRecords.size() == 0) {
             messages.put("clinicalRecordsTable", "clinicalRecordsTable.message.empty.clinicalRecords");
         }
-        request.getSession().setAttribute(CLINICAL_RECORDS_TABLE_ATTRIBUTE, fullClinicalRecords);
-        request.getSession().setAttribute(ERROR_MESSAGES_ATTRIBUTE, messages);
-        response.sendRedirect("./clinicalRecordsTable");
+        request.setAttribute(CLINICAL_RECORDS_TABLE_ATTRIBUTE, fullClinicalRecords);
+        request.setAttribute(ERROR_MESSAGES_ATTRIBUTE, messages);
+        request.getRequestDispatcher("./clinicalRecordsTable").forward(request, response);
     }
 
-    private List<List<String>> getAllClinicalRecords(HttpServletResponse response, Map<String, String> messages) throws ServletException, IOException {
+    /**
+     * Get all ClinicalRecord-class entities from DB using Dao
+     * @param response - HttpServletResponse
+     * @param messages - map of messages for output
+     * @return
+     * @throws ServletException
+     * @throws IOException
+     */
+    private List<List<String>> getAllClinicalRecords(HttpServletResponse response, Map<String, String> messages)
+            throws ServletException, IOException {
         ConnectionPool connectionPool = ConnectionPool.getInstance();
         try (Connection connection = connectionPool.takeConnection()) {
             ClinicalRecordDao clinicalRecordDao = new ClinicalRecordDao(connection);

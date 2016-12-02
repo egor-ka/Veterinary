@@ -98,4 +98,5 @@ P.petSpecies, P.petName, P.ownerName,
 CR.prescription FROM
 veterinary.doctors as D, veterinary.patients as P, veterinary.clinicalrecords as CR
 WHERE CR.doctorId=D.id and CR.patientId=P.id
+order by CR.id
 

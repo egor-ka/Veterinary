@@ -8,54 +8,74 @@
 
 <html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Patients Table</title>
+    <style>
+        <%@include file="../css/bootstrap.min.css"%>
+    </style>
+    <style>
+        <%@include file="../css/styles.css"%>
+    </style>
 </head>
 <body>
-    <c:import url="/navigationBar"/>
-    <form action="./addPatient" method="post">
-        <fmt:message key="patientsTable.button.add.patient" var="buttonAddPatient"/>
-        <input type="submit"  value="${buttonAddPatient}" />
-    </form>
-    <form action="./patientsTableController" method="get">
-        <fmt:message key="patientsTable.button.extraFeatures" var="buttonExtraFeatures"/>
-        <input type="submit" name="buttonExtraFeatures" value="${buttonExtraFeatures}"/>
-    </form>
-    <c:choose>
-        <c:when test="${empty patients_table}">
-             <label style="color:red">
-                 <c:if test="${not empty sessionScope['error_messages_patients_table']['patientsTable']}">
-                     <fmt:message key="${sessionScope['error_messages_patients_table']['patientsTable']}"/>
-                 </c:if>
-             </label>
-            <br/>
-        </c:when>
-        <c:otherwise>
-            <table class="table-fill" border="1">
-                <thead>
-                    <tr>
-                        <th><fmt:message key="patientsTable.column.ownerName"/></th>
-                        <th><fmt:message key="patientsTable.column.petName"/></th>
-                        <th><fmt:message key="patientsTable.column.petSpecies"/></th>
-                    </tr>
-                </thead>
-                <c:forEach var="patient" items="${patients_table}">
-                    <tr>
-                        <td>${patient.ownerName}</td>
-                        <td>${patient.petName}</td>
-                        <td>${patient.petSpecies}</td>
-                        <c:if test="${not empty extraFeaturesPatients and extraFeaturesPatients eq true}">
-                            <td>
-                                <form action="./deletePatientController" method="post">
-                                    <fmt:message key="patientsTable.button.delete.patient" var="buttonDeletePatient"/>
-                                    <button type="submit" name="patientsId" value="${patient.id}"/>${buttonDeletePatient}</button>
-                                </form>
-                            </td>
+    <div class="container-fluid">
+        <c:import url="/navigationBar"/>
+        <div class="container-fluid">
+            <div class="row">
+                <form action="./addPatient" id="addPatient" method="post"></form>
+                <form action="./patientsTableController" id="extraFeatures" method="get"></form>
+                <p>
+                    <fmt:message key="patientsTable.button.add.patient" var="buttonAddPatient"/>
+                    <button type="submit" class="btn btn-black" form="addPatient"/>${buttonAddPatient}</button>
+                    <fmt:message key="patientsTable.button.extraFeatures" var="buttonExtraFeatures"/>
+                    <button type="submit" name="buttonExtraFeatures" class="btn btn-black" form="extraFeatures"/>${buttonExtraFeatures}</button>
+                </p>
+            </div>
+            <div class="row">
+                <c:if test="${not empty success_message_patients_table}">
+                    <div class="alert alert-success">
+                        <fmt:message key="${success_message_patients_table}"/>
+                    </div>
+                </c:if>
+            </div>
+            <div class="row">
+                <c:choose>
+                    <c:when test="${empty patients_table}">
+                        <c:if test="${not empty error_messages_patients_table.patientsTable}">
+                            <span class="alert alert-danger">
+                                <fmt:message key="${error_messages_patients_table.patientsTable}"/>
+                            </span>
                         </c:if>
-                    </tr>
-                </c:forEach>
-            </table>
-        </c:otherwise>
-    </c:choose>
+                        <br/>
+                    </c:when>
+                    <c:otherwise>
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th><fmt:message key="patientsTable.column.ownerName"/></th>
+                                    <th><fmt:message key="patientsTable.column.petName"/></th>
+                                    <th><fmt:message key="patientsTable.column.petSpecies"/></th>
+                                </tr>
+                            </thead>
+                            <c:forEach var="patient" items="${patients_table}">
+                                <tr>
+                                    <td>${patient.ownerName}</td>
+                                    <td>${patient.petName}</td>
+                                    <td>${patient.petSpecies}</td>
+                                    <c:if test="${not empty extraFeaturesPatients and extraFeaturesPatients eq true}">
+                                        <td>
+                                            <form action="./deletePatientController" method="post">
+                                                <fmt:message key="patientsTable.button.delete.patient" var="buttonDeletePatient"/>
+                                                <button type="submit" class="btn btn-black" name="patientsId" value="${patient.id}"/>${buttonDeletePatient}</button>
+                                            </form>
+                                        </td>
+                                    </c:if>
+                                </tr>
+                            </c:forEach>
+                        </table>
+                    </c:otherwise>
+                </c:choose>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

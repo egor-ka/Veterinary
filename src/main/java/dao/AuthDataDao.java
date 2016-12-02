@@ -26,18 +26,17 @@ public class AuthDataDao implements Dao{
     }
 
     public AuthData get(String username) throws SomeException {
-        AuthData authData = null;
         String sql = String.format("SELECT * FROM %s WHERE %s=?", FULL_TABLE_NAME, COLUMN_USERNAME);
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, username);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
-                authData = new AuthData(resultSet.getInt(1), resultSet.getString(COLUMN_USERNAME), resultSet.getString(COLUMN_PASSWORD));
+                return new AuthData(resultSet.getInt(1), resultSet.getString(COLUMN_USERNAME), resultSet.getString(COLUMN_PASSWORD));
             }
         } catch (SQLException e) {
             throw new SomeException(e);
         }
-        return authData;
+        return null;
     }
 
     public void register(String username, String password, String firstName, String lastName)
@@ -89,6 +88,22 @@ public class AuthDataDao implements Dao{
         } catch (SomeException e) {
             throw new UsernameException("Username does not exist");
         }
+    }
+
+    public String getFullNameByUsername(String username) throws SomeException {
+        String query = "SELECT concat(U.firstName, \" \", U.lastName) " +
+                "FROM veterinary.users as U, veterinary.authData as D, veterinary.accounts as A " +
+                "WHERE D.username=? and U.id=A.userId and D.id=A.authDataId";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, username);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getString(1);
+            }
+        } catch(SQLException e){
+            throw new SomeException(e);
+        }
+        return null;
     }
 
     private boolean isUsernameValid(String username) {

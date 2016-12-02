@@ -23,13 +23,13 @@ public class RegistrationController extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
     private static final String ERROR_MESSAGES_ATTRIBUTE = "error_messages_registration";
+    private static final String SUCCESS_MESSAGE_ATTRIBUTE = "success_message_sign_in";
 
     public RegistrationController() {
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.setContentType("text/html");
         Set<String> keys = new HashSet<>(Arrays.asList("firstName", "lastName", "username", "password", "checkPassword"));
         Map<String, String> messages = new HashMap<>();
         Map<String, String> data = new HashMap<>();
@@ -43,19 +43,29 @@ public class RegistrationController extends HttpServlet {
         }
         if (messages.size() == 0) {
             if (!isPasswordEqual(messages, data)) {
-                response.sendRedirect("./registration");
+                request.setAttribute(ERROR_MESSAGES_ATTRIBUTE, messages);
+                request.getRequestDispatcher("./registration").forward(request, response);
             } else {
                 if (insertUserToDb(response, messages, data)) {
-                    response.sendRedirect("./signIn");
+                    request.setAttribute(SUCCESS_MESSAGE_ATTRIBUTE, "registration.message.success.registration");
+                    request.getRequestDispatcher("./signIn").forward(request, response);
                 }
             }
-            request.getSession().setAttribute(ERROR_MESSAGES_ATTRIBUTE, messages);
+            request.setAttribute(ERROR_MESSAGES_ATTRIBUTE, messages);
             return;
         }
-        request.getSession().setAttribute(ERROR_MESSAGES_ATTRIBUTE, messages);
-        response.sendRedirect("./registration");
+        request.setAttribute(ERROR_MESSAGES_ATTRIBUTE, messages);
+        request.getRequestDispatcher("./registration").forward(request, response);
     }
 
+    /**
+     * Checks two string fields for match
+     * @param messages - map of messages for output
+     * @param data - map of parameters for method
+     * @return
+     * @throws ServletException
+     * @throws IOException
+     */
     private boolean isPasswordEqual(Map<String, String> messages, Map<String, String> data)
             throws ServletException, IOException {
         if (!data.get("password").equals(data.get("checkPassword"))) {
@@ -65,6 +75,15 @@ public class RegistrationController extends HttpServlet {
         return true;
     }
 
+    /**
+     * Input ClinicalRecord-class entity into DB using Dao
+     * @param response - {@link HttpServletResponse}
+     * @param messages - map of messages for output
+     * @param data - map of parameters for method
+     * @return
+     * @throws ServletException
+     * @throws IOException
+     */
     private boolean insertUserToDb(HttpServletResponse response, Map<String, String> messages, Map<String, String> data)
             throws ServletException, IOException {
         ConnectionPool connectionPool = ConnectionPool.getInstance();

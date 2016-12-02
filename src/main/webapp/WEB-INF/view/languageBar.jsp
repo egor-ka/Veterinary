@@ -6,9 +6,17 @@
 <fmt:setLocale value="${sessionScope.language}"/>
 <fmt:setBundle basename="lang"/>
 
-<form>
-    <select id="language" name="language" onchange="submit()">
-        <option value="en_US" ${language == 'en_US' ? 'selected' : ''}>EN</option>
-        <option value="ru_RU" ${language == 'ru_RU' ? 'selected' : ''}>РУ</option>
-    </select>
-</form>
+<div class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <ul class="nav navbar-nav">
+            <li style="margin-top: 7.5px">
+                <form>
+                    <select class="form-control" id="language" name="language" onchange="submit()">
+                        <option value="en_US" ${language == 'en_US' ? 'selected' : ''}>EN</option>
+                        <option value="ru_RU" ${language == 'ru_RU' ? 'selected' : ''}>РУ</option>
+                    </select>
+                </form>
+            </li>
+        </ul>
+    </div>
+</div>

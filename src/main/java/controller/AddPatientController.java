@@ -26,6 +26,7 @@ import java.util.Map;
 public class AddPatientController extends HttpServlet {
 
     private static final String ERROR_MESSAGES_ATTRIBUTE = "error_messages_patients_table";
+    private static final String SUCCESS_MESSAGE_ATTRIBUTE = "success_message_patients_table";
 
     public AddPatientController() {
     }
@@ -34,23 +35,30 @@ public class AddPatientController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Map<String, String> messages = new HashMap<>();
         Map<String, String> data = new HashMap<>();
-        response.setContentType("text/html");
 
         data.put("ownerName", request.getParameter("ownerName"));
         data.put("petName", request.getParameter("petName"));
         data.put("petSpecies", request.getParameter("petSpecies"));
 
-        int inputElementIndex = inputPatient(request, response, messages, data);
+        int inputElementIndex = inputPatient(messages, data);
 
         if (inputElementIndex > 0) {
-            messages.put("patientsTable", "patientsTable.message.success.add.patient");
+            request.setAttribute(SUCCESS_MESSAGE_ATTRIBUTE, "patientsTable.message.success.add.patient");
         }
-        request.getSession().setAttribute(ERROR_MESSAGES_ATTRIBUTE, messages);
-        response.sendRedirect("./patientsTableController");
+        request.setAttribute(ERROR_MESSAGES_ATTRIBUTE, messages);
+        //TODO: CONTROLLER
+        request.getRequestDispatcher("./patientsTableController").forward(request, response);
     }
 
-    private int inputPatient(HttpServletRequest request, HttpServletResponse response,
-                            Map<String, String> messages, Map<String, String> data) throws ServletException, IOException {
+    /**
+     * Input Patient-class entity into DB using Dao
+     * @param messages - map of messages for output
+     * @param data - map of parameters for method
+     * @return
+     * @throws ServletException
+     * @throws IOException
+     */
+    private int inputPatient(Map<String, String> messages, Map<String, String> data) throws ServletException, IOException {
         ConnectionPool connectionPool = ConnectionPool.getInstance();
         try (Connection connection = connectionPool.takeConnection()) {
             PatientDao patientDao = new PatientDao(connection);

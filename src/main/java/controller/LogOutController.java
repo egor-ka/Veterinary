@@ -20,8 +20,9 @@ public class LogOutController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.setContentType("text/html");
+        request.getSession().removeAttribute("username");
+        request.getSession().removeAttribute("fullName");
 
-        request.getRequestDispatcher("./signIn").forward(request, response);
+        response.sendRedirect("./signIn");
     }
 }

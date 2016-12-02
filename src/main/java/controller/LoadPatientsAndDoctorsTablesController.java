@@ -25,8 +25,8 @@ import java.util.Map;
  * Created by Egor on 13.11.2016.
  */
 
-@WebServlet("/refreshPatientsAndDoctorsTablesController")
-public class RefreshPatientsAndDoctorsTablesController extends HttpServlet{
+@WebServlet("/loadPatientsAndDoctorsTablesController")
+public class LoadPatientsAndDoctorsTablesController extends HttpServlet{
 
     private static final String PATIENTS_TABLE_ATTRIBUTE = "patients_table";
     private static final String DOCTORS_TABLE_ATTRIBUTE = "doctors_table";
@@ -35,13 +35,11 @@ public class RefreshPatientsAndDoctorsTablesController extends HttpServlet{
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Map<String, String> messages = new HashMap<>();
-        response.setContentType("text/html");
-
-        List<Doctor> doctors = getAllDoctors(request, response, messages);
-        List<Patient> patients = getAllPatients(request, response, messages);
+        List<Doctor> doctors = getAllDoctors(messages);
+        List<Patient> patients = getAllPatients(messages);
 
         if (patients == null || doctors == null) {
-            request.getSession().setAttribute(ERROR_MESSAGES_ATTRIBUTE, messages);
+            request.setAttribute(ERROR_MESSAGES_ATTRIBUTE, messages);
             response.sendRedirect("./clinicalRecordsTable");
             return;
         }
@@ -51,14 +49,20 @@ public class RefreshPatientsAndDoctorsTablesController extends HttpServlet{
         if (patients.size() == 0) {
             messages.put("patientsTable", "clinicalRecordsTable.message.empty.patients");
         }
-        request.getSession().setAttribute(DOCTORS_TABLE_ATTRIBUTE, doctors);
-        request.getSession().setAttribute(PATIENTS_TABLE_ATTRIBUTE, patients);
-        request.getSession().setAttribute(ERROR_MESSAGES_ATTRIBUTE, messages);
-        response.sendRedirect("./addClinicalRecord");
+        request.setAttribute(DOCTORS_TABLE_ATTRIBUTE, doctors);
+        request.setAttribute(PATIENTS_TABLE_ATTRIBUTE, patients);
+        request.setAttribute(ERROR_MESSAGES_ATTRIBUTE, messages);
+        request.getRequestDispatcher("./addClinicalRecord").forward(request, response);
     }
 
-    private List<Doctor> getAllDoctors(HttpServletRequest request, HttpServletResponse response,
-                                       Map<String, String> messages) throws ServletException, IOException {
+    /**
+     * Get all Doctor-class entities from DB using Dao
+     * @param messages - map of messages for output
+     * @return
+     * @throws ServletException
+     * @throws IOException
+     */
+    private List<Doctor> getAllDoctors(Map<String, String> messages) throws ServletException, IOException {
         ConnectionPool connectionPool = ConnectionPool.getInstance();
         try (Connection connection = connectionPool.takeConnection()) {
             DoctorDao doctorDao = new DoctorDao(connection);
@@ -70,8 +74,14 @@ public class RefreshPatientsAndDoctorsTablesController extends HttpServlet{
         }
     }
 
-    private List<Patient> getAllPatients(HttpServletRequest request, HttpServletResponse response,
-                                         Map<String, String> messages) throws ServletException, IOException {
+    /**
+     * Get all Patient-class entities from DB using Dao
+     * @param messages - map of messages for output
+     * @return
+     * @throws ServletException
+     * @throws IOException
+     */
+    private List<Patient> getAllPatients(Map<String, String> messages) throws ServletException, IOException {
         ConnectionPool connectionPool = ConnectionPool.getInstance();
         try (Connection connection = connectionPool.takeConnection()) {
             PatientDao patientDao = new PatientDao(connection);

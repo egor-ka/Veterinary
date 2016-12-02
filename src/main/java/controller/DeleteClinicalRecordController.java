@@ -26,6 +26,7 @@ import java.util.Map;
 public class DeleteClinicalRecordController extends HttpServlet {
 
     private static final String ERROR_MESSAGES_ATTRIBUTE = "error_messages_clinical_records_table";
+    private static final String SUCCESS_MESSAGE_ATTRIBUTE = "success_message_clinical_records_table";
 
     public DeleteClinicalRecordController() {
     }
@@ -33,16 +34,24 @@ public class DeleteClinicalRecordController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Map<String, String> messages = new HashMap<>();
-        response.setContentType("text/html");
         int id = Integer.parseInt(request.getParameter("clinicalRecordIdDelete"));
         boolean result = deleteClinicalRecord(messages, id);
-        if (result == true) {
-            messages.put("clinicalRecordsTable", "clinicalRecordsTable.message.success.delete.clinicalRecord");
+        if (result) {
+            request.setAttribute(SUCCESS_MESSAGE_ATTRIBUTE, "clinicalRecordsTable.message.success.delete.clinicalRecord");
         }
-        request.getSession().setAttribute(ERROR_MESSAGES_ATTRIBUTE, messages);
-        response.sendRedirect("./clinicalRecordsTableController");
+        request.setAttribute(ERROR_MESSAGES_ATTRIBUTE, messages);
+        //TODO: CONTROLLER
+        request.getRequestDispatcher("./clinicalRecordsTableController").forward(request, response);
     }
 
+    /**
+     * Delete ClinicalRecord-class entity from DB using Dao
+     * @param messages - map of messages for output
+     * @param id - id of element to delete
+     * @return
+     * @throws ServletException
+     * @throws IOException
+     */
     private boolean deleteClinicalRecord(Map<String, String> messages, int id) throws ServletException, IOException {
         ConnectionPool connectionPool = ConnectionPool.getInstance();
         try (Connection connection = connectionPool.takeConnection()) {

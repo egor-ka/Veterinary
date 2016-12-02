@@ -8,34 +8,40 @@
 
 <html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Add patient</title>
+    <style>
+        <%@include file="../css/bootstrap.min.css"%>
+    </style>
+    <style>
+        <%@include file="../css/styles.css"%>
+    </style>
 </head>
 <body>
-    <c:import url="/navigationBar"/>
-
-    <form action="./addPatientController" method="post">
-        <label for="ownerName"><fmt:message key="addPatient.label.ownerName"/>:</label>
-        <br/>
-        <input type="text" id="ownerName" name="ownerName" required>
-        <br/>
-
-        <label for="petName"><fmt:message key="addPatient.label.petName"/>:</label>
-        <br/>
-        <input type="text" id="petName" name="petName" required>
-        <br/>
-
-        <label for="petSpecies"><fmt:message key="addPatient.label.petSpecies"/>:</label>
-        <br/>
-        <input type="text" id="petSpecies" name="petSpecies" required>
-        <br/>
-
-        <fmt:message key="addPatient.button.send" var="buttonAddPatient"/>
-        <input type="submit"  value="${buttonAddPatient}" />
-    </form>
-    <form action="./patientsTable">
-        <fmt:message key="addPatient.button.goBack" var="buttonGoBack"/>
-        <input type="submit"  value="${buttonGoBack}" />
-    </form>
+    <div class="container-fluid">
+        <c:import url="/navigationBar"/>
+        <div class="container">
+            <form action="./addPatientController" id="addPatient" method="post">
+                <div class="form-group">
+                    <label for="ownerName"><fmt:message key="addPatient.label.ownerName"/>:</label>
+                    <input type="text" class="form-control" id="ownerName" name="ownerName" required>
+                </div>
+                <div class="form-group">
+                    <label for="petName"><fmt:message key="addPatient.label.petName"/>:</label>
+                    <input type="text" class="form-control" id="petName" name="petName" required>
+                </div>
+                <div class="form-group">
+                    <label for="petSpecies"><fmt:message key="addPatient.label.petSpecies"/>:</label>
+                    <input type="text" class="form-control" id="petSpecies" name="petSpecies" required>
+                </div>
+            </form>
+            <form action="./patientsTable" id="goBack"></form>
+            <p>
+                <fmt:message key="addPatient.button.send" var="buttonAddPatient"/>
+                <button type="submit" class="btn btn-black" form="addPatient"/>${buttonAddPatient}</button>
+                <fmt:message key="addPatient.button.goBack" var="buttonGoBack"/>
+                <button type="submit" class="btn btn-black" form="goBack"/>${buttonGoBack}</button>
+            </p>
+        </div>
+    </div>
 </body>
 </html>

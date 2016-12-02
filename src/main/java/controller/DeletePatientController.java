@@ -25,6 +25,7 @@ import java.util.Map;
 public class DeletePatientController extends HttpServlet {
 
     private static final String ERROR_MESSAGES_ATTRIBUTE = "error_messages_patients_table";
+    private static final String SUCCESS_MESSAGE_ATTRIBUTE = "success_message_patients_table";
 
     public DeletePatientController() {
     }
@@ -32,16 +33,24 @@ public class DeletePatientController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Map<String, String> messages = new HashMap<>();
-        response.setContentType("text/html");
         int id = Integer.parseInt(request.getParameter("patientsId"));
         boolean result = deletePatient(messages, id);
-        if (result == true) {
-            messages.put("patientsTable", "patientsTable.message.success.delete.patient");
+        if (result) {
+            request.setAttribute(SUCCESS_MESSAGE_ATTRIBUTE, "patientsTable.message.success.delete.patient");
         }
-        request.getSession().setAttribute(ERROR_MESSAGES_ATTRIBUTE, messages);
-        response.sendRedirect("./patientsTableController");
+        request.setAttribute(ERROR_MESSAGES_ATTRIBUTE, messages);
+        //TODO: CONTROLLER
+        request.getRequestDispatcher("./patientsTableController").forward(request, response);
     }
 
+    /**
+     * Delete Patient-class entity from DB using Dao
+     * @param messages - map of messages for output
+     * @param id - id of element to delete
+     * @return
+     * @throws ServletException
+     * @throws IOException
+     */
     private boolean deletePatient(Map<String, String> messages, int id) throws ServletException, IOException {
         ConnectionPool connectionPool = ConnectionPool.getInstance();
         try (Connection connection = connectionPool.takeConnection()) {

@@ -8,54 +8,119 @@
 
 <html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Doctors table</title>
+    <style>
+        <%@include file="../css/bootstrap.min.css"%>
+    </style>
+    <style>
+        <%@include file="../css/styles.css"%>
+    </style>
 </head>
 <body>
-    <c:import url="/navigationBar"/>
-    <form action="./addDoctor" method="post">
-        <fmt:message key="doctorsTable.button.add.doctor" var="buttonAddDoctor"/>
-        <input type="submit" value="${buttonAddDoctor}" />
-    </form>
-    <form action="./doctorsTableController" method="get">
-        <fmt:message key="doctorsTable.button.extraFeatures" var="buttonExtraFeatures"/>
-        <input type="submit" name="buttonExtraFeatures" value="${buttonExtraFeatures}"/>
-    </form>
-    <c:choose>
-        <c:when test="${empty doctors_table}">
-            <label style="color:red">
-                <c:if test="${not empty sessionScope['error_messages_doctors_table']['doctorsTable']}">
-                    <fmt:message key="${sessionScope['error_messages_doctors_table']['doctorsTable']}"/>
+    <div class="container-fluid">
+        <c:import url="/navigationBar"/>
+        <div class="container-fluid">
+            <div class="row">
+                <form action="./addDoctor" id="addDoctor" method="post"></form>
+                <form action="./doctorsTableController" id="extraFeatures" method="get"></form>
+                <p>
+                    <fmt:message key="doctorsTable.button.add.doctor" var="buttonAddDoctor"/>
+                    <button type="submit" class="btn btn-black" form="addDoctor"/>${buttonAddDoctor}</button>
+                    <fmt:message key="doctorsTable.button.extraFeatures" var="buttonExtraFeatures"/>
+                    <button type="submit" name="buttonExtraFeatures" class="btn btn-black" form="extraFeatures"/>${buttonExtraFeatures}</button>
+                </p>
+            </div>
+            <div class="row">
+                <c:if test="${not empty success_message_doctors_table}">
+                    <div class="alert alert-success">
+                        <fmt:message key="${success_message_doctors_table}"/>
+                    </div>
                 </c:if>
-            </label>
-            <br/>
-        </c:when>
-        <c:otherwise>
-            <table border="1">
-                <thead>
-                    <tr>
-                        <th><fmt:message key="doctorsTable.column.firstName"/></th>
-                        <th><fmt:message key="doctorsTable.column.lastName"/></th>
-                        <th><fmt:message key="doctorsTable.column.specialization"/></th>
-                    </tr>
-                </thead>
-                <c:forEach var="doctor" items="${doctors_table}">
-                    <tr>
-                        <td>${doctor.firstName}</td>
-                        <td>${doctor.lastName}</td>
-                        <td>${doctor.specialization}</td>
-                        <c:if test="${not empty extraFeaturesDoctors and extraFeaturesDoctors eq true}">
-                            <td>
-                                <form action="./deleteDoctorController" method="post">
-                                    <fmt:message key="doctorsTable.button.delete.doctor" var="buttonDeleteDoctor"/>
-                                    <button type="submit" name="doctorId" value="${doctor.id}"/>${buttonDeleteDoctor}</button>
-                                </form>
-                            </td>
-                        </c:if>
-                    </tr>
-                </c:forEach>
-            </table>
-        </c:otherwise>
-    </c:choose>
+            </div>
+            <div class="row">
+                <c:choose>
+                    <c:when test="${empty doctors_table}">
+                        <label style="color:red">
+                            <c:if test="${not empty error_messages_doctors_table.doctorsTable}">
+                                <fmt:message key="${error_messages_doctors_table.doctorsTable}"/>
+                            </c:if>
+                        </label>
+                        <br/>
+                    </c:when>
+                    <c:otherwise>
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th><fmt:message key="doctorsTable.column.firstName"/></th>
+                                    <th><fmt:message key="doctorsTable.column.lastName"/></th>
+                                    <th><fmt:message key="doctorsTable.column.specialization"/></th>
+                                </tr>
+                            </thead>
+                            <c:forEach var="doctor" items="${doctors_table}">
+                                <tr>
+                                    <td>${doctor.firstName}</td>
+                                    <td>${doctor.lastName}</td>
+                                    <td>${doctor.specialization}</td>
+                                    <c:if test="${not empty extraFeaturesDoctors and extraFeaturesDoctors eq true}">
+                                        <td>
+                                            <form action="./deleteDoctorController" method="post">
+                                                <fmt:message key="doctorsTable.button.delete.doctor" var="buttonDeleteDoctor"/>
+                                                <button type="submit" class="btn btn-black" name="doctorId" value="${doctor.id}"/>${buttonDeleteDoctor}</button>
+                                            </form>
+                                        </td>
+                                    </c:if>
+                                </tr>
+                            </c:forEach>
+                        </table>
+                    </c:otherwise>
+                </c:choose>
+            </div>
+        </div>
+    </div>
+</body>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 </body>
 </html>

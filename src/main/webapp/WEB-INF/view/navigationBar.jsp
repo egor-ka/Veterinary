@@ -6,42 +6,39 @@
 <fmt:setLocale value="${sessionScope.language}"/>
 <fmt:setBundle basename="lang"/>
 
-<table>
-    <tr>
-        <td>
-            <fmt:message key="navBar.label.language"/>
-        </td>
-        <td>
-            <form>
-                <select id="language" name="language" onchange="submit()">
-                    <option value="en_US" ${language == 'en_US' ? 'selected' : ''}>EN</option>
-                    <option value="ru_RU" ${language == 'ru_RU' ? 'selected' : ''}>РУ</option>
-                </select>
-            </form>
-        </td>
-        <td>
-            <form action="./doctorsTableController">
-                <fmt:message key="navBar.button.show.table.doctors" var="buttonShowTableDoctors"/>
-                <input type="submit"  value="${buttonShowTableDoctors}"/>
-            </form>
-        </td>
-        <td>
-            <form action="./patientsTableController">
-                <fmt:message key="navBar.button.show.table.patients" var="buttonShowTablePatients"/>
-                <input type="submit"  value="${buttonShowTablePatients}"/>
-            </form>
-        </td>
-        <td>
-            <form action="./clinicalRecordsTableController">
-                <fmt:message key="navBar.button.show.table.clinicalRecords" var="buttonShowTableClinicalRecords"/>
-                <input type="submit"  value="${buttonShowTableClinicalRecords}"/>
-            </form>
-        </td>
-        <td>
-            <form action="./logOutController">
-                <fmt:message key="navBar.button.logout" var="buttonLogOut"/>
-                <input type="submit" value="${buttonLogOut}"/>
-            </form>
-        <td>
-    </tr>
-</table>
+<div class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <ul class="nav navbar-nav">
+            <li style="margin-top: 7.5px">
+                <form>
+                    <select class="form-control" id="language" name="language" onchange="submit()">
+                        <option value="en_US" ${language == 'en_US' ? 'selected' : ''}>EN</option>
+                        <option value="ru_RU" ${language == 'ru_RU' ? 'selected' : ''}>РУ</option>
+                    </select>
+                </form>
+            </li>
+            <li>
+                <a href="./doctorsTableController">
+                    <fmt:message key="navBar.button.show.table.doctors"/>
+                </a>
+            </li>
+            <li>
+                <a href="./patientsTableController">
+                    <fmt:message key="navBar.button.show.table.patients"/>
+                </a>
+            </li>
+            <li>
+                <a href="./clinicalRecordsTableController">
+                    <fmt:message key="navBar.button.show.table.clinicalRecords"/>
+                </a>
+            </li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+            <li>
+                <a href="./logOutController">
+                    <fmt:message key="navBar.button.logout"/>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>

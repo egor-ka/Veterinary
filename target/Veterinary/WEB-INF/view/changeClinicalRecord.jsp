@@ -8,23 +8,32 @@
 
 <html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Change clinical record</title>
+    <style>
+        <%@include file="../css/bootstrap.min.css"%>
+    </style>
+    <style>
+        <%@include file="../css/styles.css"%>
+    </style>
 </head>
 <body>
-    <c:import url="/navigationBar"/>
-
-    <form action="./changeClinicalRecordController" method="post">
-        <label for="prescription"><fmt:message key="changeClinicalRecord.label.prescription"/>:</label>
-        <input type="text" id="prescription" name="prescription" required>
-        <br/>
-
-        <fmt:message key="changeClinicalRecord.button.send" var="buttonChangeClinicalRecord"/>
-        <button type="submit" name="clinicalRecordIdChange" value="${param.clinicalRecordIdChange}"/>${buttonChangeClinicalRecord}</button>
-    </form>
-    <form action="./clinicalRecordsTable">
-        <fmt:message key="changeClinicalRecord.button.goBack" var="buttonGoBack"/>
-        <input type="submit"  value="${buttonGoBack}" />
-    </form>
+    <div class="container-fluid">
+        <c:import url="/navigationBar"/>
+        <div class="container">
+            <form action="./changeClinicalRecordController" id="change" method="post">
+                <div class="form-group">
+                    <label for="prescription"><fmt:message key="changeClinicalRecord.label.prescription"/>:</label>
+                    <input type="text" class="form-control" id="prescription" name="prescription" required>
+                </div>
+            </form>
+            <form action="./clinicalRecordsTableController" id="goBack" method="post"></form>
+            <p>
+                <fmt:message key="changeClinicalRecord.button.send" var="buttonChangeClinicalRecord"/>
+                <button type="submit" class="btn btn-black" name="clinicalRecordIdChange" value="${param.clinicalRecordIdChange}" form="change"/>${buttonChangeClinicalRecord}</button>
+                <fmt:message key="changeClinicalRecord.button.goBack" var="buttonGoBack"/>
+                <button type="submit" class="btn btn-black" form="goBack"/>${buttonGoBack}</button>
+            </p>
+        </div>
+    </div>
 </body>
 </html>

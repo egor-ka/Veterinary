@@ -26,6 +26,7 @@ import java.util.Map;
 public class AddDoctorController extends HttpServlet{
 
     private static final String ERROR_MESSAGES_ATTRIBUTE = "error_messages_doctors_table";
+    private static final String SUCCESS_MESSAGE_ATTRIBUTE = "success_message_doctors_table";
 
     public AddDoctorController() {
     }
@@ -34,23 +35,30 @@ public class AddDoctorController extends HttpServlet{
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Map<String, String> messages = new HashMap<>();
         Map<String, String> data = new HashMap<>();
-        response.setContentType("text/html");
 
         data.put("firstName", request.getParameter("firstName"));
         data.put("lastName", request.getParameter("lastName"));
         data.put("specialization", request.getParameter("specialization"));
 
-        int inputElementIndex = inputDoctor(request, response, messages, data);
+        int inputElementIndex = inputDoctor(messages, data);
 
         if (inputElementIndex > 0) {
-            messages.put("doctorsTable", "doctorsTable.message.success.add.doctor");
+            request.setAttribute(SUCCESS_MESSAGE_ATTRIBUTE, "doctorsTable.message.success.add.doctor");
         }
-        request.getSession().setAttribute(ERROR_MESSAGES_ATTRIBUTE, messages);
-        response.sendRedirect("./doctorsTableController");
+        request.setAttribute(ERROR_MESSAGES_ATTRIBUTE, messages);
+        //TODO: CONTROLLER
+        request.getRequestDispatcher("./doctorsTableController").forward(request, response);
     }
 
-    private int inputDoctor(HttpServletRequest request, HttpServletResponse response,
-                                    Map<String, String> messages, Map<String, String> data)  throws ServletException, IOException {
+    /**
+     * Input Doctor-class entity into DB using Dao
+     * @param messages - map of messages for output
+     * @param data - map of parameters for method
+     * @return
+     * @throws ServletException
+     * @throws IOException
+     */
+    private int inputDoctor(Map<String, String> messages, Map<String, String> data)  throws ServletException, IOException {
         ConnectionPool connectionPool = ConnectionPool.getInstance();
         try (Connection connection = connectionPool.takeConnection()) {
             DoctorDao doctorDao = new DoctorDao(connection);

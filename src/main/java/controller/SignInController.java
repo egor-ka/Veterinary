@@ -4,8 +4,6 @@ import connectionPool.ConnectionPool;
 import dao.AuthDataDao;
 import exception.*;
 import model.AuthData;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -31,7 +29,6 @@ public class SignInController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.setContentType("text/html");
         Set<String> keys = new HashSet<>(Arrays.asList("username", "password"));
         Map<String, String> messages = new HashMap<>();
         Map<String, String> data = new HashMap<>();
@@ -45,17 +42,27 @@ public class SignInController extends HttpServlet {
         }
         if (messages.size() == 0) {
             if (authorizeInDb(request, messages, data)) {
+                //TODO: CONTROLLER
                 response.sendRedirect("./clinicalRecordsTableController");
             } else {
                 response.sendRedirect("./signIn");
             }
-            request.getSession().setAttribute(ERROR_MESSAGES_ATTRIBUTE, messages);
+            request.setAttribute(ERROR_MESSAGES_ATTRIBUTE, messages);
             return;
         }
-        request.getSession().setAttribute(ERROR_MESSAGES_ATTRIBUTE, messages);
-        response.sendRedirect("./signIn");
+        request.setAttribute(ERROR_MESSAGES_ATTRIBUTE, messages);
+        request.getRequestDispatcher("./signIn").forward(request, response);
     }
 
+    /**
+     *
+     * @param request - {@link HttpServletRequest}
+     * @param messages - map of messages for output
+     * @param data - map of parameters for method
+     * @return
+     * @throws ServletException
+     * @throws IOException
+     */
     private boolean authorizeInDb(HttpServletRequest request, Map<String, String> messages, Map<String, String> data)
             throws ServletException, IOException {
         ConnectionPool connectionPool = ConnectionPool.getInstance();
@@ -63,8 +70,9 @@ public class SignInController extends HttpServlet {
             AuthDataDao authDataDao = new AuthDataDao(connection);
             AuthData authData = authDataDao.authorize(data.get("username"), data.get("password"));
             request.getSession().setAttribute("username", authData.getUsername());
+            request.getSession().setAttribute("fullName", authDataDao.getFullNameByUsername(authData.getUsername()));
             return true;
-        } catch (SQLException | ConnectionPoolException e) {
+        } catch (SomeException | SQLException | ConnectionPoolException e) {
             ExceptionLogger.connectionException("AuthorizeInDb", e);
             messages.put("signIn", "signIn.message.fail.connection");
             return false;
